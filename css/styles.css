@@ -2,6 +2,7 @@
   --bg-dark: #121212;
   --card-dark: #1e1e1e;
   --accent-lime: #a6f425;
+  --accent-neon: #a6f425;
   --accent-red: #ff3344;
   --text-light: #f8f9fa;
   --text-muted: #a0a0a0;
@@ -47,7 +48,7 @@ body {
   border: none;
 }
 
-btn-red:hover {
+.btn-red:hover {
   background-color: #e03126;
   color: #fff;
 }
