@@ -1,10 +1,12 @@
 :root {
   --bg-dark: #121212;
   --card-dark: #1e1e1e;
-  --accent-lime: #a6f425;
+  --card-bg: #1e1e1e;
+  --card-border: #26292e;
   --accent-neon: #a6f425;
   --accent-red: #ff3344;
   --text-light: #f8f9fa;
+  --text-main: #f8f9fa;
   --text-muted: #a0a0a0;
 }
 
@@ -77,6 +79,9 @@ body {
 .auth-card {
   max-width: 420px;
   margin: 60px auto;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
 }
 
 .nav-pills .nav-link {
