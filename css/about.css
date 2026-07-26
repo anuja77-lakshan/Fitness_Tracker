@@ -348,8 +348,10 @@ body {
   border-radius: 4px;
   display: flex;
   gap: 20px;
-}
+  cursor: pointer;
+  user-select: none;
 
+}
 .avatar-placeholder {
   width: 70px;
   height: 70px;
@@ -488,9 +490,9 @@ header.top-navbar {
 .site-footer {
   background-color: #0c0d0e;
   border-top: 1px solid #1a1b1f;
-  padding: 50px 40px 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 50px 45px 30px;
+  width: 100%;
+  margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: #8e8e93;
 }
@@ -551,7 +553,6 @@ header.top-navbar {
 .footer-links a:hover {
   color: #ffffff;
 }
-
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -564,31 +565,6 @@ header.top-navbar {
   color: #8e8e93;
   font-family: monospace;
 }
-
-.footer-socials {
-  display: flex;
-  gap: 8px;
-}
-
-.footer-socials a {
-  width: 34px;
-  height: 34px;
-  border: 1px solid #1f2026;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #c4c4c6;
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.footer-socials a:hover {
-  border-color: #ff2a3b;
-  color: #ffffff;
-}
-
 
 @media (max-width: 992px) {
   .hero, .grid-3col, .team-grid {

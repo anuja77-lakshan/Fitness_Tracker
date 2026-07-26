@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - FITCORE</title>
   <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -52,7 +53,7 @@
         <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
         <div class="stat-number">01</div>
         <div class="stat-title">Project</div>
-        <div class="stat-sub">Capstone Project</div>
+        <div class="stat-sub">Web Development Project</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon"><i class="fa-regular fa-calendar"></i></div>
@@ -138,7 +139,7 @@
 
     <div class="section-tag">Meet The Team</div>
     <section class="team-grid">
-      <div class="team-card">
+      <div class="team-card" data-linkedin="https://www.linkedin.com/in/senith-chethiya-6400463a9">
         <div class="avatar-placeholder"><i class="fa-solid fa-user"></i></div>
         <div class="team-details">
           <h4>H.M.S. Chethiya</h4>
@@ -150,14 +151,13 @@
             <span>Machine Learning</span>
           </div>
           <div class="social-links">
-            <a href="#"><i class="fa-brands fa-github"></i></a>
-            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#"><i class="fa-regular fa-envelope"></i></a>
+            <a href="https://github.com/zenithchethiya"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/senith-chethiya-6400463a9"><i class="fa-brands fa-linkedin"></i></a>
           </div>
         </div>
       </div>
 
-      <div class="team-card">
+      <div class="team-card" data-linkedin="https://www.linkedin.com/in/anujalakshan">
         <div class="avatar-placeholder"><i class="fa-solid fa-user"></i></div>
         <div class="team-details">
           <h4>U.G.A. Lakshan</h4>
@@ -169,9 +169,8 @@
             <span>Machine Learning</span>
           </div>
           <div class="social-links">
-            <a href="#"><i class="fa-brands fa-github"></i></a>
-            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#"><i class="fa-regular fa-envelope"></i></a>
+            <a href="https://github.com/anuja77-lakshan"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/anujalakshan"><i class="fa-brands fa-linkedin"></i></a>
           </div>
         </div>
       </div>
@@ -193,15 +192,34 @@
 
   <div class="footer-bottom">
     <p class="copyright-text">© 2026 FitCore. All rights reserved.</p>
-
-    <!-- Social Media Icons -->
-    <div class="footer-socials">
-      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-      <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-    </div>
   </div>
 </footer>
+<script>
+  document.querySelectorAll('.team-card').forEach(card => {
+    let lastTap = 0;
 
+    // Desktop Double Click
+    card.addEventListener('dblclick', function(e) {
+      if (e.target.closest('.social-links a')) return;
+      const url = this.getAttribute('data-linkedin');
+      if (url) window.open(url, '_blank');
+    });
+
+    // Mobile Double Tap
+    card.addEventListener('touchend', function(e) {
+      if (e.target.closest('.social-links a')) return;
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      
+      if (tapLength < 400 && tapLength > 0) {
+        const url = this.getAttribute('data-linkedin');
+        if (url) window.open(url, '_blank');
+        e.preventDefault();
+      }
+      lastTap = currentTime;
+    });
+  });
+</script>
 </body>
+
 </html>
