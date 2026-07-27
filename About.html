@@ -5,20 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - FITCORE</title>
   <link rel="stylesheet" href="css/about.css">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+ 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-  <!-- Top Navbar -->
-  <header class="top-navbar">
-    <a href="index.html" class="brand-link">
-      <img src="Images/logo1.png" alt="FITCORE Logo" class="dashboard-logo">
-    </a>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="about.html" class="active">About Us</a>
-      <a href="contact.html">Contact Us</a>
+  <!-- Header-->
+  <header>
+    <div class="logo">
+      <img src="Images/logo1.png" alt="FITCORE Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Dashboard.html">Dashboard</a></li>
+        <li><a href="Contact.html">Contact Us</a></li>
+        <li><a href="About.html" class="active">About Us</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -164,9 +172,9 @@
           <div class="team-role">Undergraduate student of University of Rajarata</div>
           <div class="spec-label">Interested in</div>
           <div class="spec-tags">
+            <span>Cybersecurity</span>
+            <span>AI/ML</span>
             <span>Web Development</span>
-            <span>UI/UX Design</span>
-            <span>Machine Learning</span>
           </div>
           <div class="social-links">
             <a href="https://github.com/anuja77-lakshan"><i class="fa-brands fa-github"></i></a>
@@ -176,50 +184,65 @@
       </div>
     </section>
   </main>
-  <footer class="site-footer">
-  <div class="footer-top">
-    <!-- Brand Column with Logo Image -->
-    <div class="footer-col brand-col">
-      <a href="index.html" class="footer-brand-link">
-        <img src="Images/logo1.png" alt="FITCORE Logo" class="footer-logo">
-      </a>
-      <p class="footer-desc">
-        The professional-grade fitness tracker for athletes who demand precision.
-      </p>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col brand">
+        <div class="footer-logo">
+          <img src="Images/logo1.png" alt="FitCore Logo">
+        </div>
+        <p>The professional-grade fitness tracker for athletes who demand precision.</p>
+      </div>
+
+      <div class="footer-col">
+        <h3>PRODUCT</h3>
+        <p><a href="Dashboard.html">Dashboard</a></p>
+        <p><a href="Dashboard.html">Workouts</a></p>
+        <p><a href="goals.html">Goals</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>SUPPORT</h3>
+        <p><a href="Contact.html">Help Center</a></p>
+        <p><a href="Contact.html">Privacy</a></p>
+        <p><a href="Contact.html">Terms</a></p>
+        <p><a href="Contact.html">Status</a></p>
+      </div>
+    </div> 
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 FitCore. All rights reserved.</p>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/anujaaa._00?igsh=MWhscTJmZHV5eXQ2eA%3D%3D&utm_source=qr"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/19911XVLdD/?mibextid=wwXIfr"><i class="fa-brands fa-facebook-f"></i></a>
+      </div>
     </div>
+  </footer>
 
-  </div>
+  <script>
+    document.querySelectorAll('.team-card').forEach(card => {
+      let lastTap = 0;
 
-  <div class="footer-bottom">
-    <p class="copyright-text">© 2026 FitCore. All rights reserved.</p>
-  </div>
-</footer>
-<script>
-  document.querySelectorAll('.team-card').forEach(card => {
-    let lastTap = 0;
-
-    // Desktop Double Click
-    card.addEventListener('dblclick', function(e) {
-      if (e.target.closest('.social-links a')) return;
-      const url = this.getAttribute('data-linkedin');
-      if (url) window.open(url, '_blank');
-    });
-
-    // Mobile Double Tap
-    card.addEventListener('touchend', function(e) {
-      if (e.target.closest('.social-links a')) return;
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
-      
-      if (tapLength < 400 && tapLength > 0) {
+      card.addEventListener('dblclick', function(e) {
+        if (e.target.closest('.social-links a')) return;
         const url = this.getAttribute('data-linkedin');
         if (url) window.open(url, '_blank');
-        e.preventDefault();
-      }
-      lastTap = currentTime;
-    });
-  });
-</script>
-</body>
+      });
 
+      card.addEventListener('touchend', function(e) {
+        if (e.target.closest('.social-links a')) return;
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        
+        if (tapLength < 400 && tapLength > 0) {
+          const url = this.getAttribute('data-linkedin');
+          if (url) window.open(url, '_blank');
+          e.preventDefault();
+        }
+        lastTap = currentTime;
+      });
+    });
+  </script>
+</body>
 </html>
