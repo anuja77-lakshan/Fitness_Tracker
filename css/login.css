@@ -1,0 +1,119 @@
+:root {
+  --bg-dark: #121212;
+  --card-dark: #1e1e1e;
+  --card-bg: #1e1e1e;
+  --card-border: #26292e;
+  --accent-neon: #a6f425;
+  --accent-red: #ff3344;
+  --text-light: #f8f9fa;
+  --text-main: #f8f9fa;
+  --text-muted: #a0a0a0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 0;
+}
+
+/* Navbar Style */
+.navbar-custom {
+  background-color: rgba(15, 16, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--card-border);
+}
+
+/* Logo */
+.brand-logo-img {
+  width: 150px !important;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px auto !important;
+}
+
+/* Buttons */
+.btn-neon {
+  background-color: var(--accent-neon);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 10px 24px;
+}
+
+.btn-neon:hover {
+  background-color: #8ce600;
+  color: #000;
+}
+
+.btn-red {
+  background-color: var(--accent-red);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-red:hover {
+  background-color: #e03126;
+  color: #fff;
+}
+
+/* Cards & Form Controls */
+.dark-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.auth-card {
+  max-width: 440px !important; 
+  width: 100%;
+  padding: 30px 32px !important; 
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); 
+}
+
+.form-control-dark, .form-select-dark {
+  background-color: #101214;
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+}
+
+.form-control-dark:focus, .form-select-dark:focus {
+  background-color: #101214;
+  color: var(--text-main);
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 59, 48, 0.25);
+}
+
+/* Nav Tabs */
+.nav-pills {
+  background-color: #101214;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+/* Inactive Tab Link */
+.nav-pills .nav-link {
+  color: var(--text-muted) !important;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.nav-pills .nav-link:hover:not(.active) {
+  color: var(--text-light) !important;
+}
+
+/* Active Tab Link (Selected State) */
+.nav-pills .nav-link.active {
+  background-color: var(--accent-red) !important; 
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(255, 51, 68, 0.4); 
+}
