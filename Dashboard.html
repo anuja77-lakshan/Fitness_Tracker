@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitCore Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="top-navbar">
+    <a href="index.html" class="brand-link">
+      <img src="Images/logo1.png" alt="FITCORE Logo" class="dashboard-logo">
+    </a>
+    <nav class="nav-links">
+      <a href="Home.html">Home</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+  </header>
+
+  <div class="fitcore-dashboard">
+    <!-- Welcome -->
+    <div class="user-header">
+      <div class="user-info">
+        <div class="avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div>
+          <div class="dashboard-title">Dashboard</div>
+          <div class="welcome-text">Welcome <span>*****</span> To Your Fitness Dashboard</div>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="header-stat-item">
+          <span class="icon-flame">🔥</span>
+          <span><strong>2,340</strong> kcal today</span>
+        </div>
+        <div class="header-stat-item">
+          <span class="icon-bolt">⚡</span>
+          <span><strong>48</strong> min active</span>
+        </div>
+        <div class="header-stat-item">
+          <span class="icon-chart">📈</span>
+          <span><strong>7-day</strong> streak</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <div class="left-column">
+        
+        <!-- Enter Body Data -->
+        <div class="card">
+          <div class="card-header">Enter Body Data</div>
+          
+          <label for="heightInput">Height (cm)</label>
+          <input type="number" id="heightInput" placeholder="e.g. 178" min="50" max="250">
+          
+          <label for="weightInput">Weight (kg)</label>
+          <input type="number" id="weightInput" placeholder="e.g. 74" min="20" max="300">
+
+          <div class="bmi-tag">BMI: <span id="bmiDisplay">--</span></div>
+          
+          <div class="save-btn-container">
+            <button class="btn" id="saveBtn">Save Data</button>
+          </div>
+        </div>
+
+        <!-- Today's Workout -->
+        <div class="card">
+          <div class="card-header">Today's Workout</div>
+          
+          <div class="workout-item">
+            <div class="workout-info">
+              <span class="workout-name">🔄 15 Squats</span>
+              <span>60%</span>
+            </div>
+            <div class="workout-progress-bar">
+              <div class="workout-progress-fill" style="width: 60%;"></div>
+            </div>
+          </div>
+
+          <div class="workout-item">
+            <div class="workout-info">
+              <span class="workout-name">⚡ 20 Push-ups</span>
+              <span>45%</span>
+            </div>
+            <div class="workout-progress-bar">
+              <div class="workout-progress-fill" style="width: 45%;"></div>
+            </div>
+          </div>
+
+          <div class="workout-item">
+            <div class="workout-info">
+              <span class="workout-name">📈 3km Run</span>
+              <span>30%</span>
+            </div>
+            <div class="workout-progress-bar">
+              <div class="workout-progress-fill" style="width: 30%;"></div>
+            </div>
+          </div>
+
+          <div class="workout-item">
+            <div class="workout-info">
+              <span class="workout-name">🏋️ 10 Pull-ups</span>
+              <span>70%</span>
+            </div>
+            <div class="workout-progress-bar">
+              <div class="workout-progress-fill" style="width: 70%;"></div>
+            </div>
+          </div>
+
+          <button class="btn btn-full start-workout-btn">Start Workout</button>
+        </div>
+
+        <!-- Quick Workout Log -->
+        <div class="card">
+          <div class="card-header">Quick Workout Log</div>
+          
+          <label>Activity</label>
+          <select>
+            <option>Run</option>
+            <option>Cycling</option>
+            <option>Skipping ropes</option>
+          </select>
+
+          <div class="form-row">
+            <div>
+              <label>Skill</label>
+              <select>
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <div>
+              <label>Time</label>
+              <select>
+                <option>30 min</option>
+                <option>45 min</option>
+                <option>60 min</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Daily Goals -->
+          <div class="goal-minibar-container">
+            <div class="goal-minibar-header">
+              <span>Logged Today</span>
+              <span><strong>1,010</strong> / 1,500 kcal</span>
+            </div>
+            <div class="goal-minibar-track">
+              <div class="goal-minibar-fill"></div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="log-table">
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th>Duration</th>
+                  <th>Calories</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Run</td>
+                  <td>32 min</td>
+                  <td class="kcal">310 kcal</td>
+                </tr>
+                <tr>
+                  <td>Cycling</td>
+                  <td>45 min</td>
+                  <td class="kcal">420 kcal</td>
+                </tr>
+                <tr>
+                  <td>HIIT</td>
+                  <td>20 min</td>
+                  <td class="kcal">280 kcal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="save-btn-container">
+            <button class="btn btn-full">Log Activity</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="right-column">
+        
+        <div class="top-right-grid">
+          
+          <!-- BMI Checker -->
+          <div class="card">
+            <div class="card-header">BMI Checker</div>
+            
+            <div class="speedo-container">
+              <div class="speedo-main-display">
+                <div class="speedo-num" id="gaugeBmiNum">--</div>
+                <div class="speedo-status-pill" id="gaugeBmiStatus">--</div>
+              </div>
+
+              <div class="speedo-arc-container">
+                <svg class="speedo-svg" viewBox="0 0 200 110">
+                  <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#1c1d22" stroke-width="12" stroke-linecap="round"/>
+                  <path id="speedoActiveTrack" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#34c759" stroke-width="12" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                </svg>
+                
+                <div class="speedo-needle-wrapper" id="speedoNeedleWrapper">
+                  <div class="speedo-pointer"></div>
+                </div>
+              </div>
+
+              <div class="speedo-legend">
+                <span class="dot-underweight">● &lt;18.5</span>
+                <span class="dot-normal">● 18.5–24.9</span>
+                <span class="dot-overweight">● 25–29.9</span>
+                <span class="dot-obese">● ≥30</span>
+              </div>
+            </div>
+
+            <div class="calorie-box">
+              Calorie target linked to BMI: <strong id="calorieTarget">-- kcal/day</strong>
+            </div>
+          </div>
+
+          <!-- Water Intake -->
+          <div class="card">
+            <div class="card-header">Water Intake</div>
+            
+            <div class="water-header-container">
+              <div class="water-header-count">
+                <span id="waterCount">0</span><span>/9 glasses</span>
+              </div>
+              
+              <div class="water-controls">
+                <button class="btn-icon" id="waterMinusBtn" aria-label="Decrease water count">-</button>
+                <button class="btn-icon" id="waterPlusBtn" aria-label="Increase water count">+</button>
+              </div>
+            </div>
+
+            <div class="water-icons" id="waterIconsContainer"></div>
+
+            <div class="water-bar">
+              <div class="water-bar-fill" id="waterBarFill"></div>
+            </div>
+            
+            <div class="water-rem" id="waterRemText">9 glasses remaining</div>
+          </div>
+
+          <!-- Daily Tip -->
+          <div class="card">
+            <div class="card-header">Daily Fitness Tips</div>
+            <div class="tip-box">
+              <span>💡</span>
+              <div class="tip-title">Tip of the Day: Stay Hydrated!</div>
+            </div>
+            <p class="tip-desc">Drinking water before meals can reduce hunger by up to 25%. Aim for 2.5–3L daily to optimize your metabolic rate and muscle recovery.</p>
+            
+            <div class="next-tip-box">
+              <div class="next-tip-label">Next tip in</div>
+              <div class="next-tip-time">08:42:17</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Activity Chart -->
+        <div class="card">
+          <div class="card-header">Recent Activity & Calories Burned</div>
+          <div class="chart-header-extra">Last 7 days</div>
+
+          <div class="chart-container">
+            <svg class="chart-svg" viewBox="0 0 700 150" preserveAspectRatio="none">
+              <line x1="0" y1="20" x2="700" y2="20" stroke="#1f2026" stroke-dasharray="4" />
+              <text x="0" y="23" fill="#8e8e93" font-size="10">600</text>
+
+              <line x1="0" y1="50" x2="700" y2="50" stroke="#1f2026" stroke-dasharray="4" />
+              <text x="0" y="53" fill="#8e8e93" font-size="10">450</text>
+
+              <line x1="0" y1="80" x2="700" y2="80" stroke="#1f2026" stroke-dasharray="4" />
+              <text x="0" y="83" fill="#8e8e93" font-size="10">300</text>
+
+              <line x1="0" y1="110" x2="700" y2="110" stroke="#1f2026" stroke-dasharray="4" />
+              <text x="0" y="113" fill="#8e8e93" font-size="10">150</text>
+
+              <text x="0" y="140" fill="#8e8e93" font-size="10">0</text>
+
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#ff3b30" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+
+              <path d="M 30,85 Q 120,70 200,90 T 350,60 T 500,70 T 670,45 L 670,140 L 30,140 Z" fill="url(#chartGrad)" />
+              <path d="M 30,110 Q 120,105 200,95 T 350,110 T 500,100 T 670,70" fill="none" stroke="#ff3b30" stroke-width="2" stroke-dasharray="4" opacity="0.6"/>
+              <path d="M 30,85 Q 120,70 200,90 T 350,60 T 500,70 T 670,45" fill="none" stroke="#ff3b30" stroke-width="2.5"/>
+
+              <circle cx="30" cy="85" r="3" fill="#ff3b30" />
+              <circle cx="200" cy="90" r="3" fill="#ff3b30" />
+              <circle cx="350" cy="60" r="3" fill="#ff3b30" />
+              <circle cx="500" cy="70" r="3" fill="#ff3b30" />
+              <circle cx="670" cy="45" r="3" fill="#ff3b30" />
+              <circle cx="670" cy="70" r="3" fill="#ff3b30" opacity="0.6"/>
+
+              <text x="25" y="145" fill="#8e8e93" font-size="10">Day 0</text>
+              <text x="180" y="145" fill="#8e8e93" font-size="10">Day 1</text>
+              <text x="335" y="145" fill="#8e8e93" font-size="10">Day 2</text>
+              <text x="485" y="145" fill="#8e8e93" font-size="10">Day 3</text>
+              <text x="635" y="145" fill="#8e8e93" font-size="10">Day 4</text>
+            </svg>
+          </div>
+
+          <div class="chart-legend">
+            <label class="checkbox-label">
+              <span class="checkbox-custom"></span>
+              Running Total
+            </label>
+            <label class="checkbox-label">
+              <span class="checkbox-custom"></span>
+              Cycling Total
+            </label>
+          </div>
+        </div>
+
+        <!-- Workout Plan -->
+        <div class="card">
+          <div class="card-header">Workout Plan (Mon–Sun)</div>
+          <div class="days-grid">
+            
+            <div class="day-card">
+              <div class="day-name">MON</div>
+              <div class="day-icon-circle">M</div>
+              <div class="day-pills">
+                <div class="day-pill">Chest</div>
+                <div class="day-pill">Triceps</div>
+              </div>
+            </div>
+
+            <div class="day-card">
+              <div class="day-name">TUE</div>
+              <div class="day-icon-circle">T</div>
+              <div class="day-pills">
+                <div class="day-pill">Back</div>
+                <div class="day-pill">Biceps</div>
+              </div>
+            </div>
+
+            <div class="day-card">
+              <div class="day-name">WED</div>
+              <div class="day-icon-circle">W</div>
+              <div class="day-pills">
+                <div class="day-pill">Legs</div>
+                <div class="day-pill">Core</div>
+              </div>
+            </div>
+
+            <div class="day-card active">
+              <div class="day-name">THU</div>
+              <div class="day-icon-circle">T</div>
+              <div class="day-pills">
+                <div class="day-pill">Shoulders</div>
+                <div class="day-pill">Arms</div>
+              </div>
+              <div class="today-tag">TODAY</div>
+            </div>
+
+            <div class="day-card">
+              <div class="day-name">FRI</div>
+              <div class="day-icon-circle">F</div>
+              <div class="day-pills">
+                <div class="day-pill">Cardio</div>
+                <div class="day-pill">HIIT</div>
+              </div>
+            </div>
+
+            <div class="day-card">
+              <div class="day-name">SAT</div>
+              <div class="day-icon-circle">S</div>
+              <div class="day-pills">
+                <div class="day-pill">Full Body</div>
+              </div>
+            </div>
+
+            <div class="day-card">
+              <div class="day-name">SUN</div>
+              <div class="day-icon-circle">S</div>
+              <div class="day-pills">
+                <div class="day-pill">Rest</div>
+                <div class="day-pill">Stretch</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Meal Plan -->
+        <div class="card">
+          <div class="card-header">Weekly Meal Plan</div>
+          <div class="table-responsive">
+            <table class="meal-table">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Breakfast</th>
+                  <th>Lunch</th>
+                  <th>Evening Snack</th>
+                  <th>Dinner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="day-col">Monday</td>
+                  <td>Boiled Chickpeas with scraped coconut & green chili</td>
+                  <td>Red rice, Fish curry, Lentil curry, Asiatic Pennywort salad</td>
+                  <td>Roasted peanuts & black tea</td>
+                  <td>String hoppers (4–5), Egg curry, Chili-onion paste</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Tuesday</td>
+                  <td>2 Finger Millet Flatbreads with spicy chili paste</td>
+                  <td>Red rice, Chicken or Soy meat curry, Lentil curry, Sessile Joyweed stir-fry</td>
+                  <td>Boiled Cassava with scraped coconut</td>
+                  <td>Coconut Flatbreads (2), Lentil curry, Sweet caramelized onion relish</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Wednesday</td>
+                  <td>String hoppers (5–6), Coconut milk gravy, Fresh coconut-chili relish</td>
+                  <td>Red rice, Fried or sour-tamarind Fish, Pumpkin curry, Water spinach garlic stir-fry</td>
+                  <td>Black tea with 1 small banana</td>
+                  <td>Wholemeal bread (2 slices) with 2-egg omelet & cucumber slices</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Thursday</td>
+                  <td>Boiled Green Gram (Mung beans) with coconut & spicy chili paste</td>
+                  <td>Red rice, Lentil curry, Crispy fried Sprats, Watercress or spinach salad</td>
+                  <td>Green tea & roasted gram</td>
+                  <td>Steamed Rice-and-Coconut Cylinders, Coconut milk gravy, Spicy chili paste</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Friday</td>
+                  <td>2 Bowl-shaped Rice Pancakes (1 Egg + 1 Plain) with spicy chili paste</td>
+                  <td>Red rice, Egg curry, Lentil curry, Beetroot curry, Moringa leaf stir-fry</td>
+                  <td>Fresh Wood Apple juice or Lime juice</td>
+                  <td>Boiled Sweet Potato with Coconut-chili relish & Fish curry</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Saturday</td>
+                  <td>Coconut Milk Rice with spicy chili paste or sweet onion relish</td>
+                  <td>Red rice, Chicken or Beef curry, Lentil curry, Ash Plantain mild curry</td>
+                  <td>Black tea & 1–2 plain crackers</td>
+                  <td>2 Finger Millet Flatbreads with Lentil curry & Coconut-chili relish</td>
+                </tr>
+                <tr>
+                  <td class="day-col">Sunday</td>
+                  <td>Egg Sandwich (2 eggs, onion, pepper) with black tea</td>
+                  <td>Yellow Rice or Red Rice, Fish or Chicken curry, Fried potato curry, Eggplant relish, Cucumber salad</td>
+                  <td>Roasted cashew nuts or peanuts</td>
+                  <td>String hoppers, Lentil curry, Coconut-chili relish</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div> 
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col brand-col">
+        <a href="index.html" class="footer-brand-link">
+          <img src="Images/logo1.png" alt="FITCORE Logo" class="footer-logo">
+        </a>
+        <p class="footer-desc">
+          The professional grade fitness tracker for athletes who demand precision.
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright-text">© 2026 FitCore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="javascript/dashboard.js"></script>
+</body>
+</html>
