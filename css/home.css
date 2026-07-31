@@ -10,33 +10,41 @@ body {
     color: #ffffff;
 }
 
-/* Header & Navigation */
+/* Header and Navigation */
 header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 80px;
-    background: #080808;
-    border-bottom: 1px solid #151515;
+    background: #000000;
+    border-bottom: 1px solid #141414;
 }
 
 .logo img {
-    height: 35px;
+    height: 38px;
     width: auto;
     display: block;
+}
+
+nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 nav ul {
     display: flex;
     list-style: none;
-    gap: 30px;
+    gap: 40px;
 }
 
 nav ul li a {
-    color: #aaaaaa;
+    color: #888888;
     text-decoration: none;
-    font-size: 14px;
-    transition: 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.3s ease;
 }
 
 nav ul li a:hover,
@@ -54,13 +62,13 @@ nav ul li a.active {
     letter-spacing: 1px;
     cursor: pointer;
     transition: 0.3s;
+    z-index: 2;
 }
 
 .login:hover {
     background: #ff0033;
     color: #ffffff;
 }
-
 .hero {
     display: flex;
     padding: 60px 80px;
@@ -302,7 +310,7 @@ footer {
 .footer-col h3 {
     font-size: 12px;
     letter-spacing: 2px;
-    color: #a4ff00; /* Neon Green Color */
+    color: #a4ff00; /* Neon Green Color*/
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 10px;
