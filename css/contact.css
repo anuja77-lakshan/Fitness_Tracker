@@ -426,30 +426,91 @@ footer {
 
 /* Footer for Mobile */
 
-@media (max-width: 900px) {
+/* CONTACT PAGE ULTIMATE MOBILE RESPONSIVE FIX */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+@media screen and (max-width: 900px) {
+  /* 1. Header Fix */
   header {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px 20px;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 15px 20px !important;
+    width: 100% !important;
   }
 
-  nav {
-    display: block; 
-    position: static;
-    transform: none;
+  header .logo {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
   }
 
-  nav ul {
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
+  header nav {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
-  nav ul li a {
-    font-size: 13px;
+  header nav ul {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  .contact-hero-grid {
-    grid-template-columns: 1fr;
+  header nav ul li a {
+    font-size: 13px !important;
+  }
+
+  .contact-hero-grid,
+  .contact-container,
+  .grid-2col,
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .contact-info,
+  .contact-form,
+  .info-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /*Footer*/
+  footer {
+    padding: 30px 20px !important;
+  }
+
+  .footer-top {
+    flex-direction: column !important;
+    gap: 30px !important;
+    align-items: flex-start !important;
+  }
+
+  .footer-col {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
   }
 }

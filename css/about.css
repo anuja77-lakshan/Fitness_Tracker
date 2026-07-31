@@ -18,12 +18,14 @@
   padding: 0;
 }
 
-body {
+html, body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: 'Poppins', 'Inter', sans-serif;
   line-height: 1.5;
   padding-top: 0;
+  overflow-x: hidden !important;
+  width: 100% !important;
 }
 
 .container {
@@ -33,7 +35,6 @@ body {
 }
 
 /* Header*/
-
 header {
   position: relative; 
   display: flex;
@@ -453,7 +454,7 @@ nav ul li a.active {
   color: #fff;
 }
 
-/* Footer*/
+/* Footer */
 footer {
     background: #080808;
     padding: 50px 80px 25px 80px;
@@ -543,35 +544,99 @@ footer {
     border-color: #a4ff00;
 }
 
-/* Footer*/
-
-@media (max-width: 900px) {
+@media screen and (max-width: 900px) {
+  /* Header */
   header {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px 20px;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 15px 20px !important;
+    width: 100% !important;
   }
 
-  nav {
-    display: block;
-    position: static;
-    transform: none;
+  header .logo {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
   }
 
-  nav ul {
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
+  header nav {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
-  nav ul li a {
-    font-size: 13px;
+  header nav ul {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  .hero, .grid-3col, .team-grid {
-    grid-template-columns: 1fr;
+  header nav ul li a {
+    font-size: 13px !important;
   }
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+  .hero,
+  .grid-3col,
+  .solutions-grid,
+  .stats-grid,
+  .team-grid,
+  .uni-banner {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-title {
+    font-size: 2.2rem !important;
+  }
+
+  .stat-card,
+  .team-card,
+  .card,
+  .mission-box,
+  .value-item {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .uni-left {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /*Footer*/
+  footer {
+    padding: 30px 20px !important;
+  }
+
+  .footer-top {
+    flex-direction: column !important;
+    gap: 30px !important;
+    align-items: flex-start !important;
+  }
+
+  .footer-col {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
   }
 }
