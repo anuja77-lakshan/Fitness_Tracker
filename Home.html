@@ -16,20 +16,20 @@
 <body>
 
     <!-- Header -->
-    <header>
-        <div class="logo">
-            <img src="Images/logo1.png" alt="FITCORE Logo">
-        </div>
-        <nav>
-            <ul>
-                <li><a href="Home.html" class="active">Home</a></li>
-                <li><a href="Dashboard.html">Dashboard</a></li>
-                <li><a href="About.html">About us</a></li>
-                <li><a href="Contact.html">Contact us</a></li>
-            </ul>
-        </nav>
-        <button class="login">LOGIN</button>
-    </header>
+<header>
+    <div class="logo">
+        <img src="Images/logo1.png" alt="FITCORE Logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="Home.html" class="active">Home</a></li>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="About.html">About us</a></li>
+            <li><a href="Contact.html">Contact us</a></li>
+        </ul>
+    </nav>
+    <button class="login">LOGIN</button>
+</header>
 
     <section class="hero">
         <div class="left">
@@ -130,7 +130,28 @@
             </div>
         </div>
     </footer>
-
+    <div id="loginModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+    <h3>Authentication Required</h3>
+    <p>Please log in to access your FitCore Dashboard and tracked progress.</p>
+    <div class="modal-actions">
+      <button id="closeModal" class="btn-cancel">CANCEL</button>
+      <button id="goToLogin" class="btn-login-confirm">LOG IN NOW</button>
+    </div>
+  </div>
+</div>
+    <div id="loginModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+    <h3>Authentication Required</h3>
+    <p>Please log in to access your FitCore Dashboard and tracked progress.</p>
+    <div class="modal-actions">
+      <button id="closeModal" class="btn-cancel">CANCEL</button>
+      <button id="goToLogin" class="btn-login-confirm">LOG IN NOW</button>
+    </div>
+  </div>
+</div>
     <script src="javascript/home.js"></script>
 </body>
 </html>

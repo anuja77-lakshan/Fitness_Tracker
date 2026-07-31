@@ -45,3 +45,58 @@ links.forEach(link => {
         this.classList.add("active");
     });
 });
+
+
+const modal = document.getElementById("loginModal");
+const closeModalBtn = document.getElementById("closeModal");
+const goToLoginBtn = document.getElementById("goToLogin");
+
+function handleProtectedNavigation(event) {
+    event.preventDefault(); // 
+    
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+    if (!isLoggedIn) {
+        modal.classList.add("active"); // Show warning modal
+    } else {
+        window.location.href = "Dashboard.html"; 
+    }
+}
+
+
+const enterBtn = document.querySelector(".btn-enter");
+if (enterBtn) {
+    enterBtn.addEventListener("click", handleProtectedNavigation);
+}
+
+
+const dashboardNavLink = document.querySelector('nav ul li a[href="Dashboard.html"]');
+if (dashboardNavLink) {
+    dashboardNavLink.addEventListener("click", handleProtectedNavigation);
+}
+
+const learnMoreLinks = document.querySelectorAll('.learn-more');
+learnMoreLinks.forEach(link => {
+    link.addEventListener("click", handleProtectedNavigation);
+});
+
+
+if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+}
+
+if (goToLoginBtn) {
+    goToLoginBtn.addEventListener("click", () => {
+        window.location.href = "login.html"; // Navigate to login page
+    });
+}
+
+// 5. Direct Login Button
+const headerLoginBtn = document.querySelector('.login');
+if (headerLoginBtn) {
+    headerLoginBtn.addEventListener("click", () => {
+        window.location.href = "login.html";
+    });
+}

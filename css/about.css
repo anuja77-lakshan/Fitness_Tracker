@@ -557,13 +557,32 @@ footer {
 }
 
 @media (max-width: 768px) {
-  nav {
-    display: none;
+  header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
   }
+
+  nav {
+    position: static;
+    transform: none;
+  }
+
+  nav ul {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav ul li a {
+    font-size: 13px;
+  }
+
   .footer-top {
     flex-direction: column;
     gap: 28px;
   }
+
   .footer-bottom {
     flex-direction: column;
     gap: 16px;
