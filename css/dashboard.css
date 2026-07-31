@@ -28,13 +28,15 @@
   padding: 0;
 }
 
-body {
+html, body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;
+  width: 100% !important;
 }
 
 fitcore-dashboard,
@@ -45,9 +47,10 @@ fitcore-dashboard,
   padding: 0 20px;
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
 }
 
-/*Header*/
+/* Header */
 header {
   position: relative; 
   display: flex;
@@ -89,6 +92,7 @@ nav ul li a:hover,
 nav ul li a.active {
   color: #ffffff;
 }
+
 .user-header {
   display: flex;
   justify-content: space-between;
@@ -155,6 +159,7 @@ nav ul li a.active {
   border-radius: 8px;
   padding: 16px;
   position: relative;
+  width: 100%;
 }
 
 .card-header {
@@ -785,7 +790,7 @@ input:focus, select:focus {
   background-color: var(--meal-row-hover-bg);
 }
 
-/*Footer*/
+/* Footer */
 footer {
     background: #080808;
     padding: 50px 80px 25px 80px;
@@ -875,18 +880,133 @@ footer {
     border-color: #a4ff00;
 }
 
-/* Footer for Mobile */
-@media (max-width: 900px) {
-    footer {
-        padding: 30px 20px;
-    }
-    .footer-top {
-        flex-direction: column;
-        gap: 30px;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
+@media screen and (max-width: 900px) {
+  /* Header Fix */
+  header {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 15px 20px !important;
+    width: 100% !important;
+  }
+
+  header .logo {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  header nav {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  header nav ul {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  header nav ul li a {
+    font-size: 13px !important;
+  }
+
+  .fitcore-dashboard {
+    padding: 0 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .dashboard-grid,
+  .top-right-grid,
+  .left-column,
+  .right-column {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+  }
+
+  .user-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .header-stats {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .welcome-text {
+    font-size: 15px !important;
+    word-break: break-word !important;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .save-btn-container {
+    width: 100% !important;
+  }
+
+  .save-btn-container .btn {
+    width: 100% !important;
+  }
+
+  /* Footer Responsive */
+  footer {
+    padding: 30px 20px !important;
+  }
+
+  .footer-top {
+    flex-direction: column !important;
+    gap: 30px !important;
+  }
+
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .speedo-arc-container {
+    width: 100% !important;
+    max-width: 180px !important;
+    height: auto !important;
+  }
+
+  .speedo-legend {
+    font-size: 8px !important;
+    gap: 2px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }

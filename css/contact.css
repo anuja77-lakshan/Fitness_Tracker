@@ -425,17 +425,31 @@ footer {
 }
 
 /* Footer for Mobile */
+
 @media (max-width: 900px) {
-    footer {
-        padding: 30px 20px;
-    }
-    .footer-top {
-        flex-direction: column;
-        gap: 30px;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
+  header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  nav {
+    display: block; 
+    position: static;
+    transform: none;
+  }
+
+  nav ul {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav ul li a {
+    font-size: 13px;
+  }
+
+  .contact-hero-grid {
+    grid-template-columns: 1fr;
+  }
 }
