@@ -72,7 +72,6 @@ Fitness_Tracker/
 ├── Contact.html
 ├── Dashboard.html
 ├── Home.html
-├── index.html
 ├── Login.html
 └── README.md
 
