@@ -183,8 +183,18 @@
       </div>
     </div>
   </footer>
+  <div id="loginModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+    <h3>Authentication Required</h3>
+    <p>Please log in to access your FitCore Dashboard and tracked progress.</p>
+    <div class="modal-actions">
+      <button id="closeModal" class="btn-cancel">CANCEL</button>
+      <button id="goToLogin" class="btn-login-confirm">LOG IN NOW</button>
+    </div>
+  </div>
+</div>
 
-  <!--JavaScript Code for the Q and A Section -->
   <script>
     document.querySelectorAll('.faq-question').forEach(item => {
       item.addEventListener('click', () => {
@@ -198,6 +208,32 @@
         }
       });
     });
+        const modal = document.getElementById('loginModal');
+const closeModal = document.getElementById('closeModal');
+const goToLogin = document.getElementById('goToLogin');
+
+const dashboardLinks = document.querySelectorAll('a[href*="Dashboard.html"], a[href*="dashboard.html"]');
+
+dashboardLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      e.preventDefault();
+      modal.classList.add('active');
+    }
+  });
+});
+
+if (closeModal) {
+  closeModal.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+}
+
+if (goToLogin) {
+  goToLogin.addEventListener('click', () => {
+    window.location.href = 'Login.html';
+  });
+}
   </script>
 </body>
 </html>
