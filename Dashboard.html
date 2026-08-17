@@ -48,9 +48,18 @@
       <div class="left-column">
         
         <!-- Enter the Body Data -->
-        <div class="card">
+                <div class="card">
           <div class="card-header">Enter Body Data</div>
-          
+
+          <label>Gender</label>
+          <div class="gender-toggle-group">
+            <button type="button" class="gender-btn active" data-gender="male" id="genderMale">
+              <i class="fa-solid fa-mars"></i> Male
+            </button>
+            <button type="button" class="gender-btn" data-gender="female" id="genderFemale">
+              <i class="fa-solid fa-venus"></i> Female
+            </button>
+          </div>
           <label for="heightInput">Height (cm)</label>
           <input type="number" id="heightInput" placeholder="e.g. 178" min="50" max="250">
           
@@ -67,51 +76,23 @@
         <!-- Today's Workout -->
         <div class="card">
           <div class="card-header">Today's Workout</div>
-          
-          <div class="workout-item">
-            <div class="workout-info">
-              <span class="workout-name">🔄 15 Squats</span>
-              <span>60%</span>
-            </div>
-            <div class="workout-progress-bar">
-              <div class="workout-progress-fill" style="width: 60%;"></div>
-            </div>
-          </div>
 
-          <div class="workout-item">
-            <div class="workout-info">
-              <span class="workout-name">⚡ 20 Push-ups</span>
-              <span>45%</span>
-            </div>
-            <div class="workout-progress-bar">
-              <div class="workout-progress-fill" style="width: 45%;"></div>
-            </div>
-          </div>
+          <div id="workoutListContainer"></div>
 
-          <div class="workout-item">
-            <div class="workout-info">
-              <span class="workout-name">📈 3km Run</span>
-              <span>30%</span>
-            </div>
-            <div class="workout-progress-bar">
-              <div class="workout-progress-fill" style="width: 30%;"></div>
-            </div>
-          </div>
-
-          <div class="workout-item">
-            <div class="workout-info">
-              <span class="workout-name">🏋️ 10 Pull-ups</span>
-              <span>70%</span>
-            </div>
-            <div class="workout-progress-bar">
-              <div class="workout-progress-fill" style="width: 70%;"></div>
-            </div>
+          <div class="session-time-container">
+            <label for="sessionTimeSelect">Session Duration (Total Time)</label>
+            <select id="sessionTimeSelect">
+              <option value="4">4 Minutes (1 min / exercise)</option>
+              <option value="8">8 Minutes (2 min / exercise)</option>
+              <option value="12" selected>12 Minutes (3 min / exercise)</option>
+              <option value="16">16 Minutes (4 min / exercise)</option>
+              <option value="20">20 Minutes (5 min / exercise)</option>
+            </select>
           </div>
 
           <button class="btn btn-full start-workout-btn">Start Workout</button>
         </div>
-
-        <!-- Quick Workout Log -->
+        
         <div class="card">
           <div class="card-header">Quick Workout Log</div>
           
@@ -328,7 +309,7 @@
 
         <!-- Workout Plan -->
         <div class="card">
-          <div class="card-header">Workout Plan (Mon–Sun)</div>
+          <div class="card-header">Workout Plan (Mon to Sun)</div>
           <div class="days-grid">
             
             <div class="day-card">
@@ -417,21 +398,21 @@
                   <td>Boiled Chickpeas with scraped coconut & green chili</td>
                   <td>Red rice, Fish curry, Lentil curry, Asiatic Pennywort salad</td>
                   <td>Roasted peanuts & black tea</td>
-                  <td>String hoppers (4–5), Egg curry, Chili-onion paste</td>
+                  <td>String hoppers (4/5), Egg curry, Chili-onion paste</td>
                 </tr>
                 <tr>
                   <td class="day-col">Tuesday</td>
                   <td>2 Finger Millet Flatbreads with spicy chili paste</td>
-                  <td>Red rice, Chicken or Soy meat curry, Lentil curry, Sessile Joyweed stir-fry</td>
+                  <td>Red rice, Chicken or Soy meat curry, Lentil curry, Sessile Joyweed stir fry</td>
                   <td>Boiled Cassava with scraped coconut</td>
                   <td>Coconut Flatbreads (2), Lentil curry, Sweet caramelized onion relish</td>
                 </tr>
                 <tr>
                   <td class="day-col">Wednesday</td>
-                  <td>String hoppers (5–6), Coconut milk gravy, Fresh coconut-chili relish</td>
-                  <td>Red rice, Fried or sour-tamarind Fish, Pumpkin curry, Water spinach garlic stir-fry</td>
+                  <td>String hoppers (5/6), Coconut milk gravy, Fresh coconut chili relish</td>
+                  <td>Red rice, Fried or sour-tamarind Fish, Pumpkin curry, Water spinach garlic stir fry</td>
                   <td>Black tea with 1 small banana</td>
-                  <td>Wholemeal bread (2 slices) with 2-egg omelet & cucumber slices</td>
+                  <td>Wholemeal bread (2 slices) with 2 egg omelet & cucumber slices</td>
                 </tr>
                 <tr>
                   <td class="day-col">Thursday</td>
@@ -443,23 +424,23 @@
                 <tr>
                   <td class="day-col">Friday</td>
                   <td>2 Bowl-shaped Rice Pancakes (1 Egg + 1 Plain) with spicy chili paste</td>
-                  <td>Red rice, Egg curry, Lentil curry, Beetroot curry, Moringa leaf stir-fry</td>
+                  <td>Red rice, Egg curry, Lentil curry, Beetroot curry, Moringa leaf stir fry</td>
                   <td>Fresh Wood Apple juice or Lime juice</td>
-                  <td>Boiled Sweet Potato with Coconut-chili relish & Fish curry</td>
+                  <td>Boiled Sweet Potato with Coconut chili relish & Fish curry</td>
                 </tr>
                 <tr>
                   <td class="day-col">Saturday</td>
                   <td>Coconut Milk Rice with spicy chili paste or sweet onion relish</td>
                   <td>Red rice, Chicken or Beef curry, Lentil curry, Ash Plantain mild curry</td>
-                  <td>Black tea & 1–2 plain crackers</td>
-                  <td>2 Finger Millet Flatbreads with Lentil curry & Coconut-chili relish</td>
+                  <td>Black tea & 1/2 plain crackers</td>
+                  <td>2 Finger Millet Flatbreads with Lentil curry & Coconut chili relish</td>
                 </tr>
                 <tr>
                   <td class="day-col">Sunday</td>
                   <td>Egg Sandwich (2 eggs, onion, pepper) with black tea</td>
                   <td>Yellow Rice or Red Rice, Fish or Chicken curry, Fried potato curry, Eggplant relish, Cucumber salad</td>
                   <td>Roasted cashew nuts or peanuts</td>
-                  <td>String hoppers, Lentil curry, Coconut-chili relish</td>
+                  <td>String hoppers, Lentil curry, Coconut chili relish</td>
                 </tr>
               </tbody>
             </table>
@@ -506,6 +487,27 @@
       </div>
     </div>
   </footer>
+  <div id="workoutTimerModal" class="workout-modal-overlay">
+  <div class="workout-modal-card">
+    <div class="modal-badge" id="modalWorkoutStep">EXERCISE 1 OF 4</div>
+    <h2 class="modal-workout-title" id="modalWorkoutTitle">🔄 15 Squats</h2>
+    <div class="modal-target-info" id="modalWorkoutTarget">Target: 15 reps</div>
+
+    <div class="modal-timer-circle">
+      <svg class="timer-svg" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="70" class="timer-bg-track"></circle>
+        <circle cx="80" cy="80" r="70" id="timerActiveCircle" class="timer-active-track"></circle>
+      </svg>
+      <div class="modal-time-display" id="modalTimeDisplay">00:00</div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-pause" id="modalPauseBtn">Pause</button>
+      <button type="button" class="btn btn-skip" id="modalNextBtn">Next Exercise ➔</button>
+    </div>
+    <button type="button" class="btn-modal-close" id="modalCloseBtn">✕ End Session</button>
+  </div>
+</div>
 
   <script src="javascript/dashboard.js"></script>
 </body>
