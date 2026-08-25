@@ -152,6 +152,29 @@
           </div>
         </div>
 
+        <!-- Water Intake -->
+          <div class="card">
+            <div class="card-header">Water Intake</div>
+            
+            <div class="water-header-container">
+              <div class="water-header-count">
+                <span id="waterCount">0</span><span>/9 glasses</span>
+              </div>
+              
+              <div class="water-controls">
+                <button class="btn-icon" id="waterMinusBtn" aria-label="Decrease water count">-</button>
+                <button class="btn-icon" id="waterPlusBtn" aria-label="Increase water count">+</button>
+              </div>
+            </div>
+
+            <div class="water-icons" id="waterIconsContainer"></div>
+
+            <div class="water-bar">
+              <div class="water-bar-fill" id="waterBarFill"></div>
+            </div>
+            
+            <div class="water-rem" id="waterRemText">9 glasses remaining</div>
+          </div>   
       </div>
 
       <div class="right-column">
@@ -192,29 +215,54 @@
             </div>
           </div>
 
-          <!-- Water Intake -->
-          <div class="card">
-            <div class="card-header">Water Intake</div>
-            
-            <div class="water-header-container">
-              <div class="water-header-count">
-                <span id="waterCount">0</span><span>/9 glasses</span>
-              </div>
-              
-              <div class="water-controls">
-                <button class="btn-icon" id="waterMinusBtn" aria-label="Decrease water count">-</button>
-                <button class="btn-icon" id="waterPlusBtn" aria-label="Increase water count">+</button>
-              </div>
-            </div>
+          <!-- Target Rings -->
+      <div class="card target-rings-card" id="targetRingsCard">
+        <div class="card-header">Daily Target Rings</div>
 
-            <div class="water-icons" id="waterIconsContainer"></div>
+        <div class="rings-hud-container">
+          <div class="rings-svg-wrapper">
+            <svg viewBox="0 0 120 120" class="rings-svg">
+              <!-- Calorie Tracker(Outer) -->
+              <circle cx="60" cy="60" r="50" class="ring-bg" stroke-width="8"/>
+              <circle id="ringCalorie" cx="60" cy="60" r="50" class="ring-fill ring-calorie" stroke-width="8" stroke-dasharray="314.15" stroke-dashoffset="314.15"/>
 
-            <div class="water-bar">
-              <div class="water-bar-fill" id="waterBarFill"></div>
+              <!-- Workout Tracker (Middle) -->
+              <circle cx="60" cy="60" r="38" class="ring-bg" stroke-width="8"/>
+              <circle id="ringWorkout" cx="60" cy="60" r="38" class="ring-fill ring-workout" stroke-width="8" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+
+              <!-- Water Tracker (Inner) -->
+              <circle cx="60" cy="60" r="26" class="ring-bg" stroke-width="8"/>
+              <circle id="ringWater" cx="60" cy="60" r="26" class="ring-fill ring-water" stroke-width="8" stroke-dasharray="163.36" stroke-dashoffset="163.36"/>
+            </svg>
+            <div class="rings-center-stat">
+              <span id="ringsOverallPct">0%</span>
             </div>
-            
-            <div class="water-rem" id="waterRemText">9 glasses remaining</div>
           </div>
+
+          <div class="rings-legend-compact">
+            <div class="ring-legend-row">
+              <span class="ring-dot dot-cal"></span>
+              <span class="legend-name">Calories:</span>
+              <strong id="ringCalLabel">0%</strong>
+            </div>
+            <div class="ring-legend-row">
+              <span class="ring-dot dot-work"></span>
+              <span class="legend-name">Workout:</span>
+              <strong id="ringWorkLabel">0%</strong>
+            </div>
+            <div class="ring-legend-row">
+              <span class="ring-dot dot-wat"></span>
+              <span class="legend-name">Water:</span>
+              <strong id="ringWatLabel">0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="streak-mini-badge" id="streakBadgeBox">
+          <i class="fa-solid fa-fire-flame-curved streak-fire-icon"></i>
+          <span id="streakBadgeText">Daily Target: In Progress</span>
+        </div>
+      </div>
 
           <!-- Daily Fitness Tips -->
           <div class="card">

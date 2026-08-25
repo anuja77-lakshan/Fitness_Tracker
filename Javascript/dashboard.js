@@ -10,6 +10,9 @@ let activityTotals = {
   Skipping: 0
 };
 
+const TOTAL_GLASSES = 9;
+let currentGlasses = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
   const heightInput = document.getElementById('heightInput');
   const weightInput = document.getElementById('weightInput');
@@ -40,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWorkoutTimer();
   initActivityLog();
   initDailyFitnessTip();
+  updateHudTargetRings();
 
   // Body Data Saver
   if (saveBtn) {
@@ -173,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateWorkoutPlan(category);
     renderActivityChart();
+    updateHudTargetRings();
   }
 
   function updateWorkoutPlan(category) {
@@ -211,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
     }
     renderWorkoutList();
+    updateHudTargetRings();
   }
 
   function renderWorkoutList() {
@@ -408,6 +414,7 @@ function initActivityLog() {
         if (chkSkipping) chkSkipping.checked = true;
 
         renderActivityChart();
+        updateHudTargetRings();
 
         alert(`Logged ${burnedKcal} kcal for ${activity}!`);
       });
@@ -588,6 +595,8 @@ function initActivityLog() {
     if (modalCloseBtn) {
       modalCloseBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
+        localStorage.setItem('fitcore_workout_done', 'true');
+        updateHudTargetRings();
         timerModal.classList.remove('active');
       });
     }
@@ -640,6 +649,7 @@ function initActivityLog() {
   function saveAndUpdateWater() {
     localStorage.setItem('user_water_glasses', currentGlasses);
     renderWaterUI();
+    updateHudTargetRings();
   }
 
   if (waterPlusBtn) {
@@ -745,6 +755,48 @@ function initActivityLog() {
     updateCountdown();
     setInterval(updateCountdown, 1000);
   }
+function updateHudTargetRings() {
+  const ringCal = document.getElementById('ringCalorie');
+  const ringWork = document.getElementById('ringWorkout');
+  const ringWat = document.getElementById('ringWater');
+
+  const calLabel = document.getElementById('ringCalLabel');
+  const workLabel = document.getElementById('ringWorkLabel');
+  const watLabel = document.getElementById('ringWatLabel');
+  const overallPct = document.getElementById('ringsOverallPct');
+  const badgeText = document.getElementById('streakBadgeText');
+  const cardEl = document.getElementById('targetRingsCard');
+
+  // 1. Calorie Progress
+  const calPct = Math.min(100, Math.round((totalLoggedCalories / dynamicMaxCalorie) * 100)) || 0;
+  if (ringCal) ringCal.style.strokeDashoffset = 314.15 - (314.15 * (calPct / 100));
+  if (calLabel) calLabel.textContent = `${calPct}%`;
+
+  // 2. Workout Progress
+  const isWorkoutDone = localStorage.getItem('fitcore_workout_done') === 'true';
+  const workPct = isWorkoutDone ? 100 : 0;
+  if (ringWork) ringWork.style.strokeDashoffset = 238.76 - (238.76 * (workPct / 100));
+  if (workLabel) workLabel.textContent = `${workPct}%`;
+
+  // 3. Water Progress
+  const watPct = Math.min(100, Math.round((currentGlasses / TOTAL_GLASSES) * 100)) || 0;
+  if (ringWat) ringWat.style.strokeDashoffset = 163.36 - (163.36 * (watPct / 100));
+  if (watLabel) watLabel.textContent = `${watPct}%`;
+
+  // Average Completion
+  const avg = Math.round((calPct + workPct + watPct) / 3);
+  if (overallPct) overallPct.textContent = `${avg}%`;
+
+  // 100% Milestone Trigger
+  if (calPct >= 100 && workPct >= 100 && watPct >= 100) {
+    if (cardEl) cardEl.classList.add('all-crushed');
+    if (badgeText) badgeText.textContent = '🔥 Streak: 5 Days Active! All 3 Rings Crushed!';
+  } else {
+    if (cardEl) cardEl.classList.remove('all-crushed');
+    if (badgeText) badgeText.textContent = 'Daily Target: In Progress';
+  }
+}
+
 });
 
 const logoutBtn = document.getElementById('logoutBtn');

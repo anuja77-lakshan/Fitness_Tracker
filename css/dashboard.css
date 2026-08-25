@@ -575,6 +575,123 @@ input:focus, select:focus {
   color: var(--accent-red);
 }
 
+/* Target Rings Styling */
+.target-rings-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rings-hud-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.rings-svg-wrapper {
+  position: relative;
+  width: 95px;
+  height: 95px;
+  flex-shrink: 0;
+}
+
+.rings-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #1c1d22;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring-calorie { stroke: var(--accent-red); }
+.ring-workout { stroke: var(--accent-neon); }
+.ring-water { stroke: var(--accent-blue); }
+
+.rings-center-stat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text-light);
+}
+
+.rings-legend-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.ring-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.ring-legend-row strong {
+  color: var(--text-light);
+  margin-left: auto;
+}
+
+.ring-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot-cal { background-color: var(--accent-red); }
+.dot-work { background-color: var(--accent-neon); }
+.dot-wat { background-color: var(--accent-blue); }
+
+.streak-mini-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #17181c;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.streak-fire-icon {
+  font-size: 13px;
+  color: var(--accent-red);
+}
+
+.target-rings-card.all-crushed {
+  border-color: #a4ff00;
+  box-shadow: 0 0 16px rgba(164, 255, 0, 0.15);
+}
+
+.target-rings-card.all-crushed .streak-mini-badge {
+  background: rgba(164, 255, 0, 0.1);
+  border-color: #a4ff00;
+  color: #a4ff00;
+}
+
+.target-rings-card.all-crushed .streak-fire-icon {
+  color: #a4ff00;
+  filter: drop-shadow(0 0 6px rgba(164, 255, 0, 0.8));
+}
+
 /* Water Tracker */
 .water-header-container {
   display: flex;
