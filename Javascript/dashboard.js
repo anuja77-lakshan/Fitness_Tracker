@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWaterTracker();
   initWorkoutTimer();
   initActivityLog();
+  initDailyFitnessTip();
 
   // Body Data Saver
   if (saveBtn) {
@@ -455,7 +456,6 @@ function initActivityLog() {
       return { x: xCoords[index], y: y };
     });
 
-    // Clean Path Calculation: Day 2 to Day 5 with 0 values stay flat on baseline
     let pathD = `M ${points[0].x},${points[0].y}`;
     for (let i = 1; i < points.length; i++) {
       const prev = points[i - 1];
@@ -658,6 +658,92 @@ function initActivityLog() {
         saveAndUpdateWater();
       }
     });
+  }
+  
+  function initDailyFitnessTip() {
+    const tipTitleEl = document.getElementById('dailyTipTitle');
+    const tipDescEl = document.getElementById('dailyTipDesc');
+    const tipIconEl = document.getElementById('dailyTipIcon');
+    const countdownEl = document.getElementById('nextTipCountdown');
+
+    // Fitness Tips Collection
+    const fitnessTips = [
+      {
+        icon: '💧',
+        title: 'Tip of the Day: Stay Hydrated!',
+        desc: 'Drink enough water throughout the day to stay hydrated, support recovery, and keep your body feeling energized.'
+      },
+      {
+        icon: '😴',
+        title: 'Tip of the Day: Prioritize Sleep',
+        desc: 'Getting 7 to 9 hours of good sleep helps your body recover, keeps you focused, and supports healthy energy levels.'
+      },
+      {
+        icon: '🥩',
+        title: 'Tip of the Day: Protein at Breakfast',
+        desc: 'Start your day with a protein rich breakfast to stay full longer and keep your energy steady.'
+      },
+      {
+        icon: '🚶',
+        title: 'Tip of the Day: Post-Meal Walking',
+        desc: 'A short walk after a meal is a simple way to stay active and support healthy digestion.'
+      },
+      {
+        icon: '🧘',
+        title: 'Tip of the Day: Active Recovery',
+        desc: 'Try some light stretching, yoga, or easy movement on rest days to help your body recover.'
+      },
+      {
+        icon: '⏱️',
+        title: 'Tip of the Day: Consistent Workout Timing',
+        desc: 'Working out around the same time each day can help you build a routine and stay consistent.'
+      },
+      {
+        icon: '🥬',
+        title: 'Tip of the Day: Fiber First',
+        desc: 'Adding vegetables and other fiber rich foods to your meals can help you feel full and maintain steady energy.'
+      }
+    ];
+
+    // Select tip based on day of the year
+    function updateTipContent() {
+      const now = new Date();
+      const startOfYear = new Date(now.getFullYear(), 0, 0);
+      const diff = now - startOfYear;
+      const oneDay = 1000 * 60 * 60 * 24;
+      const dayOfYear = Math.floor(diff / oneDay);
+      
+      const tipIndex = dayOfYear % fitnessTips.length;
+      const currentTip = fitnessTips[tipIndex];
+
+      if (tipIconEl) tipIconEl.textContent = currentTip.icon;
+      if (tipTitleEl) tipTitleEl.textContent = currentTip.title;
+      if (tipDescEl) tipDescEl.textContent = currentTip.desc;
+    }
+
+    // Countdown to midnight 12 (00:00:00)
+    function updateCountdown() {
+      const now = new Date();
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const diffMs = tomorrow - now;
+
+      if (diffMs <= 1000) {
+        updateTipContent();
+      }
+
+      const totalSecs = Math.floor(diffMs / 1000);
+      const hours = String(Math.floor(totalSecs / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, '0');
+      const secs = String(totalSecs % 60).padStart(2, '0');
+
+      if (countdownEl) {
+        countdownEl.textContent = `${hours}:${mins}:${secs}`;
+      }
+    }
+
+    updateTipContent();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   }
 });
 
