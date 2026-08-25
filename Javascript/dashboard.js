@@ -1,4 +1,15 @@
 let currentWorkouts = [];
+let dayCalories = [0, 0, 0, 0, 0];
+let totalLoggedCalories = 0;
+let dynamicMaxCalorie = 2000;
+let dynamicBmiColor = '#34c759';
+
+let activityTotals = {
+  Running: 0,
+  Cycling: 0,
+  Skipping: 0
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const heightInput = document.getElementById('heightInput');
   const weightInput = document.getElementById('weightInput');
@@ -27,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSavedBodyData();
   initWaterTracker();
   initWorkoutTimer();
+  initActivityLog();
 
   // Body Data Saver
   if (saveBtn) {
@@ -127,6 +139,20 @@ document.addEventListener('DOMContentLoaded', () => {
       calorieTarget.textContent = `${recommendedCalories} kcal/day`;
     }
 
+    dynamicMaxCalorie = recommendedCalories;
+    dynamicBmiColor = color;
+
+    const loggedBar = document.getElementById('loggedCaloriesBar');
+    const goalMaxCalText = document.getElementById('goalMaxCalText');
+    if (goalMaxCalText) {
+      goalMaxCalText.textContent = dynamicMaxCalorie.toLocaleString();
+    }
+    if (loggedBar) {
+      const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
+      loggedBar.style.width = `${goalPercent}%`;
+      loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
+    }
+
     const minBmi = 15;
     const maxBmi = 35;
     const clampedBmi = Math.min(Math.max(bmi, minBmi), maxBmi);
@@ -145,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateWorkoutPlan(category);
+    renderActivityChart();
   }
 
   function updateWorkoutPlan(category) {
@@ -236,6 +263,234 @@ window.handleSliderChange = function(index, value) {
     slider.style.setProperty('--progress', `${percentage}%`);
   }
 };
+
+function initActivityLog() {
+    const logBtn = document.getElementById('logActivityBtn');
+    const activitySelect = document.getElementById('activityType');
+    const skillSelect = document.getElementById('activitySkill');
+    const durationSelect = document.getElementById('activityDuration');
+    const tableBody = document.getElementById('activityLogTableBody');
+    const loggedText = document.getElementById('loggedCaloriesText');
+    const loggedBar = document.getElementById('loggedCaloriesBar');
+
+    const runningTotalText = document.getElementById('runningTotalText');
+    const cyclingTotalText = document.getElementById('cyclingTotalText');
+    const skippingTotalText = document.getElementById('skippingTotalText');
+
+    const chkRunning = document.getElementById('chkRunning');
+    const chkCycling = document.getElementById('chkCycling');
+    const chkSkipping = document.getElementById('chkSkipping');
+
+    const todayStr = new Date().toDateString();
+    const savedDate = localStorage.getItem('fitcore_last_date');
+    const savedHistory = localStorage.getItem('fitcore_day_calories');
+    const savedTotals = localStorage.getItem('fitcore_activity_totals');
+
+    if (savedHistory) {
+      dayCalories = JSON.parse(savedHistory);
+    } else {
+      dayCalories = [0, 0, 0, 0, 0];
+      localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
+    }
+
+    if (savedTotals) {
+      activityTotals = JSON.parse(savedTotals);
+    }
+
+    if (savedDate && savedDate !== todayStr) {
+      dayCalories.unshift(0);
+      if (dayCalories.length > 5) {
+        dayCalories.pop();
+      }
+      totalLoggedCalories = 0;
+      activityTotals = { Running: 0, Cycling: 0, Skipping: 0 };
+      localStorage.setItem('fitcore_last_date', todayStr);
+      localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
+      localStorage.setItem('fitcore_total_calories', '0');
+      localStorage.setItem('fitcore_activity_totals', JSON.stringify(activityTotals));
+    } else if (!savedDate) {
+      localStorage.setItem('fitcore_last_date', todayStr);
+    }
+
+    const savedTotal = localStorage.getItem('fitcore_total_calories');
+    if (savedTotal) {
+      totalLoggedCalories = parseInt(savedTotal, 10);
+    }
+
+    updateActivityTotalsUI();
+
+    if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
+    const currentPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
+    if (loggedBar) {
+      loggedBar.style.width = `${currentPercent}%`;
+      loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
+    }
+
+    renderActivityChart();
+
+    function updateActivityTotalsUI() {
+      if (runningTotalText) runningTotalText.textContent = `${activityTotals.Running.toLocaleString()} kcal`;
+      if (cyclingTotalText) cyclingTotalText.textContent = `${activityTotals.Cycling.toLocaleString()} kcal`;
+      if (skippingTotalText) skippingTotalText.textContent = `${activityTotals.Skipping.toLocaleString()} kcal`;
+    }
+
+    function applyActivityFilters() {
+      let filteredDay0 = 0;
+
+      if (chkRunning && chkRunning.checked) filteredDay0 += activityTotals.Running;
+      if (chkCycling && chkCycling.checked) filteredDay0 += activityTotals.Cycling;
+      if (chkSkipping && chkSkipping.checked) filteredDay0 += activityTotals.Skipping;
+
+      dayCalories[0] = filteredDay0;
+      totalLoggedCalories = filteredDay0;
+
+      if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
+
+      const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
+      if (loggedBar) {
+        loggedBar.style.width = `${goalPercent}%`;
+      }
+
+      renderActivityChart();
+    }
+
+    [chkRunning, chkCycling, chkSkipping].forEach(chk => {
+      if (chk) {
+        chk.addEventListener('change', applyActivityFilters);
+      }
+    });
+
+    if (logBtn) {
+      logBtn.addEventListener('click', () => {
+        const activity = activitySelect ? activitySelect.value : 'Running';
+        const skillMultiplier = skillSelect ? parseFloat(skillSelect.value) : 1.0;
+        const duration = durationSelect ? parseInt(durationSelect.value, 10) : 30;
+
+        let baseRate = 8;
+        if (activity === 'Cycling') baseRate = 7;
+        if (activity === 'Skipping ropes') baseRate = 10;
+
+        const burnedKcal = Math.round(duration * baseRate * skillMultiplier);
+
+        if (tableBody) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${activity}</td>
+            <td>${duration} min</td>
+            <td class="kcal">${burnedKcal} kcal</td>
+          `;
+          tableBody.insertBefore(row, tableBody.firstChild);
+        }
+
+        if (activity === 'Running') activityTotals.Running += burnedKcal;
+        else if (activity === 'Cycling') activityTotals.Cycling += burnedKcal;
+        else if (activity === 'Skipping ropes') activityTotals.Skipping += burnedKcal;
+
+        updateActivityTotalsUI();
+
+        totalLoggedCalories += burnedKcal;
+        if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
+
+        const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
+        if (loggedBar) {
+          loggedBar.style.width = `${goalPercent}%`;
+          loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
+        }
+
+        dayCalories[0] += burnedKcal;
+        localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
+        localStorage.setItem('fitcore_total_calories', totalLoggedCalories.toString());
+        localStorage.setItem('fitcore_activity_totals', JSON.stringify(activityTotals));
+
+        if (chkRunning) chkRunning.checked = true;
+        if (chkCycling) chkCycling.checked = true;
+        if (chkSkipping) chkSkipping.checked = true;
+
+        renderActivityChart();
+
+        alert(`Logged ${burnedKcal} kcal for ${activity}!`);
+      });
+    }
+  }
+
+  function renderActivityChart() {
+    const chartLine = document.getElementById('chartLine');
+    const chartArea = document.getElementById('chartArea');
+    const chartPoints = document.getElementById('chartPoints');
+    const chartStopColorTop = document.getElementById('chartStopColorTop');
+    const chartStopColorBottom = document.getElementById('chartStopColorBottom');
+    const day1Label = document.getElementById('day1Label');
+    if (!chartLine || !chartArea || !chartPoints) return;
+
+    const activeColor = dynamicBmiColor || '#34c759';
+    chartLine.setAttribute('stroke', activeColor);
+
+    if (chartStopColorTop) {
+      chartStopColorTop.setAttribute('stop-color', activeColor);
+      chartStopColorTop.setAttribute('stop-opacity', '0.45');
+    }
+    if (chartStopColorBottom) {
+      chartStopColorBottom.setAttribute('stop-color', activeColor);
+      chartStopColorBottom.setAttribute('stop-opacity', '0.0');
+    }
+
+    const y4 = document.getElementById('chartY4');
+    const y3 = document.getElementById('chartY3');
+    const y2 = document.getElementById('chartY2');
+    const y1 = document.getElementById('chartY1');
+
+    const maxKcal = dynamicMaxCalorie || 2000;
+    if (y4) y4.textContent = maxKcal;
+    if (y3) y3.textContent = Math.round(maxKcal * 0.75);
+    if (y2) y2.textContent = Math.round(maxKcal * 0.50);
+    if (y1) y1.textContent = Math.round(maxKcal * 0.25);
+
+    const xCoords = [70, 220, 370, 520, 660];
+    const chartBottom = 140;
+    const chartTop = 20;
+
+    const points = dayCalories.map((kcal, index) => {
+      const clampedKcal = Math.min(maxKcal, Math.max(0, kcal));
+      const y = chartBottom - ((clampedKcal / maxKcal) * (chartBottom - chartTop));
+      return { x: xCoords[index], y: y };
+    });
+
+    // Clean Path Calculation: Day 2 to Day 5 with 0 values stay flat on baseline
+    let pathD = `M ${points[0].x},${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      if (prev.y === chartBottom && curr.y === chartBottom) {
+        pathD += ` L ${curr.x},${curr.y}`;
+      } else {
+        const cpX1 = prev.x + (curr.x - prev.x) * 0.5;
+        const cpX2 = prev.x + (curr.x - prev.x) * 0.5;
+        pathD += ` C ${cpX1},${prev.y} ${cpX2},${curr.y} ${curr.x},${curr.y}`;
+      }
+    }
+
+    chartLine.setAttribute('d', pathD);
+
+    const areaD = `${pathD} L ${points[points.length - 1].x},${chartBottom} L ${points[0].x},${chartBottom} Z`;
+    chartArea.setAttribute('d', areaD);
+
+    chartPoints.innerHTML = '';
+    points.forEach((p, idx) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', p.x);
+      circle.setAttribute('cy', p.y);
+      circle.setAttribute('r', idx === 0 ? '5' : '3.5');
+      circle.setAttribute('fill', idx === 0 ? activeColor : `${activeColor}88`);
+      chartPoints.appendChild(circle);
+    });
+
+    if (day1Label) {
+      const labelY = Math.max(12, points[0].y - 10);
+      day1Label.setAttribute('y', labelY);
+      day1Label.setAttribute('x', points[0].x);
+      day1Label.setAttribute('fill', activeColor);
+    }
+  }
 
   function initWorkoutTimer() {
     const startWorkoutBtn = document.querySelector('.start-workout-btn');

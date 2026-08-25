@@ -96,28 +96,29 @@
         <div class="card">
           <div class="card-header">Quick Workout Log</div>
           
-          <label>Activity</label>
-          <select>
-            <option>Run</option>
-            <option>Cycling</option>
-            <option>Skipping ropes</option>
+          <label for="activityType">Activity</label>
+          <select id="activityType">
+            <option value="Running">Run</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Skipping ropes">Skipping ropes</option>
           </select>
 
           <div class="form-row">
             <div>
-              <label>Skill</label>
-              <select>
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Advanced</option>
+              <label for="activitySkill">Skill</label>
+              <select id="activitySkill">
+                <option value="1.0">Beginner</option>
+                <option value="1.2">Intermediate</option>
+                <option value="1.5">Advanced</option>
               </select>
             </div>
             <div>
-              <label>Time</label>
-              <select>
-                <option>30 min</option>
-                <option>45 min</option>
-                <option>60 min</option>
+              <label for="activityDuration">Time</label>
+              <select id="activityDuration">
+                <option value="15">15 min</option>
+                <option value="30" selected>30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">60 min</option>
               </select>
             </div>
           </div>
@@ -126,10 +127,10 @@
           <div class="goal-minibar-container">
             <div class="goal-minibar-header">
               <span>Logged Today</span>
-              <span><strong>1,010</strong> / 1,500 kcal</span>
+              <span><strong id="loggedCaloriesText">0</strong> / <span id="goalMaxCalText">2,000</span> kcal</span>
             </div>
             <div class="goal-minibar-track">
-              <div class="goal-minibar-fill"></div>
+              <div class="goal-minibar-fill" id="loggedCaloriesBar" style="width: 0%;"></div>
             </div>
           </div>
 
@@ -142,28 +143,12 @@
                   <th>Calories</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Run</td>
-                  <td>32 min</td>
-                  <td class="kcal">310 kcal</td>
-                </tr>
-                <tr>
-                  <td>Cycling</td>
-                  <td>45 min</td>
-                  <td class="kcal">420 kcal</td>
-                </tr>
-                <tr>
-                  <td>HIIT</td>
-                  <td>20 min</td>
-                  <td class="kcal">280 kcal</td>
-                </tr>
-              </tbody>
+              <tbody id="activityLogTableBody"></tbody>
             </table>
           </div>
 
           <div class="save-btn-container">
-            <button class="btn btn-full">Log Activity</button>
+            <button type="button" class="btn btn-full" id="logActivityBtn">Log Activity</button>
           </div>
         </div>
 
@@ -250,59 +235,63 @@
 
         <!-- Activity Chart -->
         <div class="card">
-          <div class="card-header">Recent Activity & Calories Burned</div>
-          <div class="chart-header-extra">Last 7 days</div>
+          <div class="card-header">
+            Recent Activity & Calories Burned
+            <span class="chart-header-extra">Last 5 days</span>
+          </div>
 
           <div class="chart-container">
-            <svg class="chart-svg" viewBox="0 0 700 150" preserveAspectRatio="none">
-              <line x1="0" y1="20" x2="700" y2="20" stroke="#1f2026" stroke-dasharray="4" />
-              <text x="0" y="23" fill="#8e8e93" font-size="10">600</text>
+            <div class="chart-scroll-wrapper">
+              <svg class="chart-svg" viewBox="0 0 700 170" preserveAspectRatio="xMidYMid meet">
+                <line x1="45" y1="20" x2="685" y2="20" stroke="#1f2026" stroke-dasharray="4" />
+                <text id="chartY4" x="40" y="24" text-anchor="end" fill="#8e8e93" font-size="11">2000</text>
 
-              <line x1="0" y1="50" x2="700" y2="50" stroke="#1f2026" stroke-dasharray="4" />
-              <text x="0" y="53" fill="#8e8e93" font-size="10">450</text>
+                <line x1="45" y1="50" x2="685" y2="50" stroke="#1f2026" stroke-dasharray="4" />
+                <text id="chartY3" x="40" y="54" text-anchor="end" fill="#8e8e93" font-size="11">1500</text>
 
-              <line x1="0" y1="80" x2="700" y2="80" stroke="#1f2026" stroke-dasharray="4" />
-              <text x="0" y="83" fill="#8e8e93" font-size="10">300</text>
+                <line x1="45" y1="80" x2="685" y2="80" stroke="#1f2026" stroke-dasharray="4" />
+                <text id="chartY2" x="40" y="84" text-anchor="end" fill="#8e8e93" font-size="11">1000</text>
 
-              <line x1="0" y1="110" x2="700" y2="110" stroke="#1f2026" stroke-dasharray="4" />
-              <text x="0" y="113" fill="#8e8e93" font-size="10">150</text>
+                <line x1="45" y1="110" x2="685" y2="110" stroke="#1f2026" stroke-dasharray="4" />
+                <text id="chartY1" x="40" y="114" text-anchor="end" fill="#8e8e93" font-size="11">500</text>
 
-              <text x="0" y="140" fill="#8e8e93" font-size="10">0</text>
+                <text x="40" y="144" text-anchor="end" fill="#8e8e93" font-size="11">0</text>
 
-              <defs>
-                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#ff3b30" stop-opacity="0.0"/>
-                </linearGradient>
-              </defs>
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop id="chartStopColorTop" offset="0%" stop-color="#34c759" stop-opacity="0.45"/>
+                    <stop id="chartStopColorBottom" offset="100%" stop-color="#34c759" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
 
-              <path d="M 30,85 Q 120,70 200,90 T 350,60 T 500,70 T 670,45 L 670,140 L 30,140 Z" fill="url(#chartGrad)" />
-              <path d="M 30,110 Q 120,105 200,95 T 350,110 T 500,100 T 670,70" fill="none" stroke="#ff3b30" stroke-width="2" stroke-dasharray="4" opacity="0.6"/>
-              <path d="M 30,85 Q 120,70 200,90 T 350,60 T 500,70 T 670,45" fill="none" stroke="#ff3b30" stroke-width="2.5"/>
+                <path id="chartArea" d="" fill="url(#chartGrad)" />
+                <path id="chartLine" d="" fill="none" stroke="#34c759" stroke-width="2.5"/>
+                <g id="chartPoints"></g>
 
-              <circle cx="30" cy="85" r="3" fill="#ff3b30" />
-              <circle cx="200" cy="90" r="3" fill="#ff3b30" />
-              <circle cx="350" cy="60" r="3" fill="#ff3b30" />
-              <circle cx="500" cy="70" r="3" fill="#ff3b30" />
-              <circle cx="670" cy="45" r="3" fill="#ff3b30" />
-              <circle cx="670" cy="70" r="3" fill="#ff3b30" opacity="0.6"/>
-
-              <text x="25" y="145" fill="#8e8e93" font-size="10">Day 0</text>
-              <text x="180" y="145" fill="#8e8e93" font-size="10">Day 1</text>
-              <text x="335" y="145" fill="#8e8e93" font-size="10">Day 2</text>
-              <text x="485" y="145" fill="#8e8e93" font-size="10">Day 3</text>
-              <text x="635" y="145" fill="#8e8e93" font-size="10">Day 4</text>
-            </svg>
+                <text id="day1Label" x="70" y="140" text-anchor="middle" fill="#34c759" font-weight="700" font-size="11">Day 1 (Today)</text>
+                <text x="220" y="160" text-anchor="middle" fill="#8e8e93" font-size="11">Day 2</text>
+                <text x="370" y="160" text-anchor="middle" fill="#8e8e93" font-size="11">Day 3</text>
+                <text x="520" y="160" text-anchor="middle" fill="#8e8e93" font-size="11">Day 4</text>
+                <text x="660" y="160" text-anchor="middle" fill="#8e8e93" font-size="11">Day 5</text>
+              </svg>
+            </div>
           </div>
 
           <div class="chart-legend">
             <label class="checkbox-label">
+              <input type="checkbox" id="chkRunning" class="activity-filter-chk" checked>
               <span class="checkbox-custom"></span>
-              Running Total
+              Running Total: <strong id="runningTotalText">0 kcal</strong>
             </label>
             <label class="checkbox-label">
+              <input type="checkbox" id="chkCycling" class="activity-filter-chk" checked>
               <span class="checkbox-custom"></span>
-              Cycling Total
+              Cycling Total: <strong id="cyclingTotalText">0 kcal</strong>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chkSkipping" class="activity-filter-chk" checked>
+              <span class="checkbox-custom"></span>
+              Skipping Total: <strong id="skippingTotalText">0 kcal</strong>
             </label>
           </div>
         </div>
