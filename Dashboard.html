@@ -4,6 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - FitCore</title>
+  
+  <!--User not logout, cannot login to the page -->
+  <script>
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.replace('Login.html');
+    }
+    fetch('auth/check_auth.php')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.authenticated) {
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('user');
+          window.location.replace('Login.html');
+        } else if (data.user && data.user.name) {
+          document.addEventListener('DOMContentLoaded', () => {
+            const nameSpan = document.querySelector('.welcome-text span');
+            if (nameSpan) nameSpan.textContent = data.user.name;
+          });
+        }
+      })
+      .catch(() => {
+        window.location.replace('Login.html');
+      });
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +38,7 @@
 <body>
 
   <!-- Header -->
-<header>
+  <header>
     <div class="logo">
       <img src="Images/logo1.png" alt="FITCORE Logo">
     </div>
@@ -30,25 +55,24 @@
   <div class="fitcore-dashboard">
     <!-- Welcome -->
     <div class="user-header">
-    <div class="user-info">
+      <div class="user-info">
         <div class="avatar">
-            <i class="fa-regular fa-user"></i>
+          <i class="fa-regular fa-user"></i>
         </div>
         <div class="welcome-text">
-            Welcome <span>******</span> To Your Fitness Dashboard
+          Welcome <span>User</span> To Your Fitness Dashboard
         </div>
-    </div>
-    <button class="btn-logout" id="logoutBtn">
+      </div>
+      <button class="btn-logout" id="logoutBtn">
         <i class="fa-solid fa-arrow-right-from-bracket"></i> LOGOUT
-    </button>
+      </button>
     </div>
 
     <div class="dashboard-grid">
-
       <div class="left-column">
         
         <!-- Enter the Body Data -->
-                <div class="card">
+        <div class="card">
           <div class="card-header">Enter Body Data</div>
 
           <label>Gender</label>
@@ -153,28 +177,28 @@
         </div>
 
         <!-- Water Intake -->
-          <div class="card">
-            <div class="card-header">Water Intake</div>
-            
-            <div class="water-header-container">
-              <div class="water-header-count">
-                <span id="waterCount">0</span><span>/9 glasses</span>
-              </div>
-              
-              <div class="water-controls">
-                <button class="btn-icon" id="waterMinusBtn" aria-label="Decrease water count">-</button>
-                <button class="btn-icon" id="waterPlusBtn" aria-label="Increase water count">+</button>
-              </div>
-            </div>
-
-            <div class="water-icons" id="waterIconsContainer"></div>
-
-            <div class="water-bar">
-              <div class="water-bar-fill" id="waterBarFill"></div>
+        <div class="card">
+          <div class="card-header">Water Intake</div>
+          
+          <div class="water-header-container">
+            <div class="water-header-count">
+              <span id="waterCount">0</span><span>/9 glasses</span>
             </div>
             
-            <div class="water-rem" id="waterRemText">9 glasses remaining</div>
-          </div>   
+            <div class="water-controls">
+              <button class="btn-icon" id="waterMinusBtn" aria-label="Decrease water count">-</button>
+              <button class="btn-icon" id="waterPlusBtn" aria-label="Increase water count">+</button>
+            </div>
+          </div>
+
+          <div class="water-icons" id="waterIconsContainer"></div>
+
+          <div class="water-bar">
+            <div class="water-bar-fill" id="waterBarFill"></div>
+          </div>
+          
+          <div class="water-rem" id="waterRemText">9 glasses remaining</div>
+        </div>   
       </div>
 
       <div class="right-column">
@@ -216,53 +240,53 @@
           </div>
 
           <!-- Target Rings -->
-      <div class="card target-rings-card" id="targetRingsCard">
-        <div class="card-header">Daily Target Rings</div>
+          <div class="card target-rings-card" id="targetRingsCard">
+            <div class="card-header">Daily Target Rings</div>
 
-        <div class="rings-hud-container">
-          <div class="rings-svg-wrapper">
-            <svg viewBox="0 0 120 120" class="rings-svg">
-              <!-- Calorie Tracker(Outer) -->
-              <circle cx="60" cy="60" r="50" class="ring-bg" stroke-width="8"/>
-              <circle id="ringCalorie" cx="60" cy="60" r="50" class="ring-fill ring-calorie" stroke-width="8" stroke-dasharray="314.15" stroke-dashoffset="314.15"/>
+            <div class="rings-hud-container">
+              <div class="rings-svg-wrapper">
+                <svg viewBox="0 0 120 120" class="rings-svg">
+                  <!-- Calorie Tracker (Outer) -->
+                  <circle cx="60" cy="60" r="50" class="ring-bg" stroke-width="8"/>
+                  <circle id="ringCalorie" cx="60" cy="60" r="50" class="ring-fill ring-calorie" stroke-width="8" stroke-dasharray="314.15" stroke-dashoffset="314.15"/>
 
-              <!-- Workout Tracker (Middle) -->
-              <circle cx="60" cy="60" r="38" class="ring-bg" stroke-width="8"/>
-              <circle id="ringWorkout" cx="60" cy="60" r="38" class="ring-fill ring-workout" stroke-width="8" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+                  <!-- Workout Tracker (Middle) -->
+                  <circle cx="60" cy="60" r="38" class="ring-bg" stroke-width="8"/>
+                  <circle id="ringWorkout" cx="60" cy="60" r="38" class="ring-fill ring-workout" stroke-width="8" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
 
-              <!-- Water Tracker (Inner) -->
-              <circle cx="60" cy="60" r="26" class="ring-bg" stroke-width="8"/>
-              <circle id="ringWater" cx="60" cy="60" r="26" class="ring-fill ring-water" stroke-width="8" stroke-dasharray="163.36" stroke-dashoffset="163.36"/>
-            </svg>
-            <div class="rings-center-stat">
-              <span id="ringsOverallPct">0%</span>
+                  <!-- Water Tracker (Inner) -->
+                  <circle cx="60" cy="60" r="26" class="ring-bg" stroke-width="8"/>
+                  <circle id="ringWater" cx="60" cy="60" r="26" class="ring-fill ring-water" stroke-width="8" stroke-dasharray="163.36" stroke-dashoffset="163.36"/>
+                </svg>
+                <div class="rings-center-stat">
+                  <span id="ringsOverallPct">0%</span>
+                </div>
+              </div>
+
+              <div class="rings-legend-compact">
+                <div class="ring-legend-row">
+                  <span class="ring-dot dot-cal"></span>
+                  <span class="legend-name">Calories:</span>
+                  <strong id="ringCalLabel">0%</strong>
+                </div>
+                <div class="ring-legend-row">
+                  <span class="ring-dot dot-work"></span>
+                  <span class="legend-name">Workout:</span>
+                  <strong id="ringWorkLabel">0%</strong>
+                </div>
+                <div class="ring-legend-row">
+                  <span class="ring-dot dot-wat"></span>
+                  <span class="legend-name">Water:</span>
+                  <strong id="ringWatLabel">0%</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="streak-mini-badge" id="streakBadgeBox">
+              <i class="fa-solid fa-fire-flame-curved streak-fire-icon"></i>
+              <span id="streakBadgeText">Daily Target: In Progress</span>
             </div>
           </div>
-
-          <div class="rings-legend-compact">
-            <div class="ring-legend-row">
-              <span class="ring-dot dot-cal"></span>
-              <span class="legend-name">Calories:</span>
-              <strong id="ringCalLabel">0%</strong>
-            </div>
-            <div class="ring-legend-row">
-              <span class="ring-dot dot-work"></span>
-              <span class="legend-name">Workout:</span>
-              <strong id="ringWorkLabel">0%</strong>
-            </div>
-            <div class="ring-legend-row">
-              <span class="ring-dot dot-wat"></span>
-              <span class="legend-name">Water:</span>
-              <strong id="ringWatLabel">0%</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="streak-mini-badge" id="streakBadgeBox">
-          <i class="fa-solid fa-fire-flame-curved streak-fire-icon"></i>
-          <span id="streakBadgeText">Daily Target: In Progress</span>
-        </div>
-      </div>
 
           <!-- Daily Fitness Tips -->
           <div class="card">
@@ -420,12 +444,10 @@
         </div>
 
       </div>
-
     </div>
-
   </div> 
 
- <!-- Footer -->
+  <!-- Footer -->
   <footer>
     <div class="footer-top">
       <div class="footer-col brand">
@@ -459,28 +481,41 @@
       </div>
     </div>
   </footer>
+
   <div id="workoutTimerModal" class="workout-modal-overlay">
-  <div class="workout-modal-card">
-    <div class="modal-badge" id="modalWorkoutStep">EXERCISE 1 OF 4</div>
-    <h2 class="modal-workout-title" id="modalWorkoutTitle">🔄 15 Squats</h2>
-    <div class="modal-target-info" id="modalWorkoutTarget">Target: 15 reps</div>
+    <div class="workout-modal-card">
+      <div class="modal-badge" id="modalWorkoutStep">EXERCISE 1 OF 4</div>
+      <h2 class="modal-workout-title" id="modalWorkoutTitle">🔄 15 Squats</h2>
+      <div class="modal-target-info" id="modalWorkoutTarget">Target: 15 reps</div>
 
-    <div class="modal-timer-circle">
-      <svg class="timer-svg" viewBox="0 0 160 160">
-        <circle cx="80" cy="80" r="70" class="timer-bg-track"></circle>
-        <circle cx="80" cy="80" r="70" id="timerActiveCircle" class="timer-active-track"></circle>
-      </svg>
-      <div class="modal-time-display" id="modalTimeDisplay">00:00</div>
-    </div>
+      <div class="modal-timer-circle">
+        <svg class="timer-svg" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" class="timer-bg-track"></circle>
+          <circle cx="80" cy="80" r="70" id="timerActiveCircle" class="timer-active-track"></circle>
+        </svg>
+        <div class="modal-time-display" id="modalTimeDisplay">00:00</div>
+      </div>
 
-    <div class="modal-actions">
-      <button type="button" class="btn btn-pause" id="modalPauseBtn">Pause</button>
-      <button type="button" class="btn btn-skip" id="modalNextBtn">Next Exercise ➔</button>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-pause" id="modalPauseBtn">Pause</button>
+        <button type="button" class="btn btn-skip" id="modalNextBtn">Next Exercise ➔</button>
+      </div>
+      <button type="button" class="btn-modal-close" id="modalCloseBtn">✕ End Session</button>
     </div>
-    <button type="button" class="btn-modal-close" id="modalCloseBtn">✕ End Session</button>
   </div>
-</div>
 
   <script src="javascript/dashboard.js"></script>
+  
+  <!-- Logout Action Script -->
+  <script>
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('user');
+      fetch('auth/logout.php')
+        .finally(() => {
+          window.location.href = 'Login.html';
+        });
+    });
+  </script>
 </body>
 </html>
