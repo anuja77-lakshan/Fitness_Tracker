@@ -48,8 +48,8 @@ links.forEach(link => {
 });
 
 const modal = document.getElementById("loginModal");
-const closeModalButton = document.getElementById("closeModal");
-const goToLoginButton = document.getElementById("goToLogin");
+const closeModalBtn = document.getElementById("closeModal");
+const goToLoginBtn = document.getElementById("goToLogin");
 
 function handleProtectedNavigation(event) {
     event.preventDefault(); // 
@@ -83,6 +83,7 @@ learnMoreLinks.forEach(link => {
 
 if (closeModalBtn) {
     closeModalBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
         modal.classList.remove("active");
     });
 }
