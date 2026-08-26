@@ -17,9 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const heightInput = document.getElementById('heightInput');
   const weightInput = document.getElementById('weightInput');
   const saveBtn = document.getElementById('saveBtn');
-
-  const TOTAL_GLASSES = 9;
-  let currentGlasses = 0;
   const waterCountEl = document.getElementById('waterCount');
   const waterBarFillEl = document.getElementById('waterBarFill');
   const waterRemTextEl = document.getElementById('waterRemText');
@@ -44,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initActivityLog();
   initDailyFitnessTip();
   updateHudTargetRings();
+  initRealtimeWorkoutPlan();
 
   // Body Data Saver
   if (saveBtn) {
@@ -579,6 +577,8 @@ function initActivityLog() {
         loadWorkoutStep(currentWorkoutIndex);
       } else {
         clearInterval(timerInterval);
+        localStorage.setItem('fitcore_workout_done', 'true');
+        updateHudTargetRings();
         alert('🎉 Great job! You completed all workouts!');
         timerModal.classList.remove('active');
       }
@@ -595,8 +595,6 @@ function initActivityLog() {
     if (modalCloseBtn) {
       modalCloseBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
-        localStorage.setItem('fitcore_workout_done', 'true');
-        updateHudTargetRings();
         timerModal.classList.remove('active');
       });
     }
@@ -795,6 +793,49 @@ function updateHudTargetRings() {
     if (cardEl) cardEl.classList.remove('all-crushed');
     if (badgeText) badgeText.textContent = 'Daily Target: In Progress';
   }
+}
+//workout plan
+function initRealtimeWorkoutPlan() {
+  const daysGridContainer = document.getElementById('workoutDaysGrid');
+  if (!daysGridContainer) return;
+
+  const weeklySchedule = [
+    { name: 'MON', letter: 'M', pills: ['Chest', 'Triceps'], dayIndex: 1 },
+    { name: 'TUE', letter: 'T', pills: ['Back', 'Biceps'], dayIndex: 2 },
+    { name: 'WED', letter: 'W', pills: ['Legs', 'Core'], dayIndex: 3 },
+    { name: 'THU', letter: 'T', pills: ['Shoulders', 'Arms'], dayIndex: 4 },
+    { name: 'FRI', letter: 'F', pills: ['Cardio', 'HIIT'], dayIndex: 5 },
+    { name: 'SAT', letter: 'S', pills: ['Full Body'], dayIndex: 6 },
+    { name: 'SUN', letter: 'S', pills: ['Rest', 'Stretch'], dayIndex: 0 }
+  ];
+
+  let currentRenderedDay = null;
+
+  function updateWorkoutDaysGrid() {
+    const todayIndex = new Date().getDay();
+
+    if (currentRenderedDay === todayIndex) return;
+    currentRenderedDay = todayIndex;
+
+    daysGridContainer.innerHTML = weeklySchedule.map(day => {
+      const isToday = day.dayIndex === todayIndex;
+      const pillsHtml = day.pills.map(pill => `<div class="day-pill">${pill}</div>`).join('');
+
+      return `
+        <div class="day-card ${isToday ? 'active' : ''}">
+          <div class="day-name">${day.name}</div>
+          <div class="day-icon-circle">${day.letter}</div>
+          <div class="day-pills">
+            ${pillsHtml}
+          </div>
+          ${isToday ? '<div class="today-tag">TODAY</div>' : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  updateWorkoutDaysGrid();
+  setInterval(updateWorkoutDaysGrid, 30000);
 }
 
 });
