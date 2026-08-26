@@ -1,42 +1,43 @@
-// Image Sliding
-const images = [
-    "Images/hero1.jpg",
-    "Images/hero2.jpg",
-    "Images/hero3.jpg"
+//Image Sliding
+const slides = [
+    { src: "Images/hero1.jpg", label: "ENDURANCE GOALS" },
+    { src: "Images/hero2.jpg", label: "STRENGTH TRAINING" },
+    { src: "Images/hero3.jpg", label: "CARDIO TRACKING" }
 ];
 
-let current = 0;
-
-const slider = document.getElementById("slider");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const dots = document.querySelectorAll(".dot");
+let currentIndex = 0;
+const sliderImage = document.getElementById("slider");
+const previousButton = document.getElementById("prevBtn");
+const nextButton = document.getElementById("nextBtn");
+const sliderDots = document.querySelectorAll(".dot");
+const imageLabel = document.getElementById("imageLabel");
 
 function updateSlider(index) {
-    slider.src = images[index];
-    dots.forEach((dot, i) => {
+    if (sliderImage) sliderImage.src = slides[index].src;
+    if (imageLabel) imageLabel.textContent = slides[index].label;
+    sliderDots.forEach((dot, i) => {
         dot.classList.toggle("active", i === index);
     });
 }
 
-// Next Button 
-nextBtn.addEventListener("click", () => {
-    current = (current + 1) % images.length;
-    updateSlider(current);
-});
+if (nextButton) {
+    nextButton.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlider(currentIndex);
+    });
+}
 
-// Previous Button
-prevBtn.addEventListener("click", () => {
-    current = (current - 1 + images.length) % images.length;
-    updateSlider(current);
-});
+if (previousButton) {
+    previousButton.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlider(currentIndex);
+    });
+}
 
-// Auto Slide
 setInterval(() => {
-    current = (current + 1) % images.length;
-    updateSlider(current);
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlider(currentIndex);
 }, 4000);
-
 // Menu 
 const links = document.querySelectorAll("nav a");
 links.forEach(link => {
@@ -46,10 +47,9 @@ links.forEach(link => {
     });
 });
 
-
 const modal = document.getElementById("loginModal");
-const closeModalBtn = document.getElementById("closeModal");
-const goToLoginBtn = document.getElementById("goToLogin");
+const closeModalButton = document.getElementById("closeModal");
+const goToLoginButton = document.getElementById("goToLogin");
 
 function handleProtectedNavigation(event) {
     event.preventDefault(); // 
@@ -89,14 +89,14 @@ if (closeModalBtn) {
 
 if (goToLoginBtn) {
     goToLoginBtn.addEventListener("click", () => {
-        window.location.href = "login.html"; // Navigate to login page
+        window.location.href = "Login.html"; // Navigate to login page
     });
 }
 
-// 5. Direct Login Button
+//Direct Login Button
 const headerLoginBtn = document.querySelector('.login');
 if (headerLoginBtn) {
     headerLoginBtn.addEventListener("click", () => {
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
     });
 }
