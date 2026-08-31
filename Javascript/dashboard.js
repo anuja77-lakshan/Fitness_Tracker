@@ -541,25 +541,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const badgeText = document.getElementById('streakBadgeText');
     const cardEl = document.getElementById('targetRingsCard');
 
+    // 1. Calories Ring
     const calPct = Math.min(100, Math.round((totalLoggedCalories / dynamicMaxCalorie) * 100)) || 0;
     if (ringCal) ringCal.style.strokeDashoffset = 314.15 - (314.15 * (calPct / 100));
     if (calLabel) calLabel.textContent = `${calPct}%`;
 
-    const isWorkoutDone = localStorage.getItem('fitcore_workout_done') === 'true';
-    const workPct = isWorkoutDone ? 100 : 0;
+    // 2. Today's Workout Ring (Date-based Check)
+    const todayStr = new Date().toISOString().split('T')[0];
+    const doneDate = localStorage.getItem('fitcore_workout_date');
+    const workPct = (doneDate === todayStr) ? 100 : 0;
+    
     if (ringWork) ringWork.style.strokeDashoffset = 238.76 - (238.76 * (workPct / 100));
     if (workLabel) workLabel.textContent = `${workPct}%`;
 
+    // 3. Water Intake Ring
     const watPct = Math.min(100, Math.round((currentGlasses / TOTAL_GLASSES) * 100)) || 0;
     if (ringWat) ringWat.style.strokeDashoffset = 163.36 - (163.36 * (watPct / 100));
     if (watLabel) watLabel.textContent = `${watPct}%`;
 
+    // Overall Progress & Badges
     const avg = Math.round((calPct + workPct + watPct) / 3);
     if (overallPct) overallPct.textContent = `${avg}%`;
 
     if (calPct >= 100 && workPct >= 100 && watPct >= 100) {
       if (cardEl) cardEl.classList.add('all-crushed');
-      if (badgeText) badgeText.textContent = '🔥 Streak: Active! All 3 Rings Crushed!';
+      if (badgeText) badgeText.textContent = 'All 3 Rings Crushed🔥';
     } else {
       if (cardEl) cardEl.classList.remove('all-crushed');
       if (badgeText) badgeText.textContent = 'Daily Target: In Progress';
@@ -639,9 +645,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadWorkoutStep(currentWorkoutIndex);
       } else {
         clearInterval(timerInterval);
-        localStorage.setItem('fitcore_workout_done', 'true');
+        
+        const todayStr = new Date().toISOString().split('T')[0];
+        localStorage.setItem('fitcore_workout_date', todayStr);
+        
         updateHudTargetRings();
-        alert('🎉 Great job! Workout completed!');
+        alert('🎉 Great job! Today\'s Workout completed!');
         timerModal.classList.remove('active');
       }
     }
