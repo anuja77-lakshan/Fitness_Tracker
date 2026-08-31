@@ -35,17 +35,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  loadSavedBodyData();
-  initWaterTracker();
+  // Load Dashboard data
+  loadDashboardData();
   initWorkoutTimer();
-  initActivityLog();
   initDailyFitnessTip();
-  updateHudTargetRings();
   initRealtimeWorkoutPlan();
 
-  // Body Data Saver
+  async function loadDashboardData() {
+    try {
+      const res = await fetch('auth/get_dashboard_data.php');
+      if (res.status === 401) {
+        window.location.replace('Login.html');
+        return;
+      }
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        if (data.user) {
+          selectedGender = data.user.gender || 'male';
+          genderBtns.forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-gender') === selectedGender);
+          });
+          heightInput.value = data.user.height;
+          weightInput.value = data.user.weight;
+          processBodyData(parseFloat(data.user.height), parseFloat(data.user.weight), selectedGender);
+        }
+
+        currentGlasses = data.water_glasses || 0;
+        renderWaterUI();
+
+        if (data.chart_data) {
+          dayCalories = data.chart_data;
+        }
+
+        const tableBody = document.getElementById('activityLogTableBody');
+        if (tableBody && data.activities) {
+          tableBody.innerHTML = '';
+          activityTotals = { Running: 0, Cycling: 0, Skipping: 0 };
+          totalLoggedCalories = 0;
+
+          data.activities.forEach(act => {
+            const cal = parseInt(act.calories, 10);
+            totalLoggedCalories += cal;
+            if (act.activity.includes('Run')) activityTotals.Running += cal;
+            else if (act.activity.includes('Cycling')) activityTotals.Cycling += cal;
+            else if (act.activity.includes('Skipping')) activityTotals.Skipping += cal;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${act.activity}</td>
+              <td>${act.duration} min</td>
+              <td class="kcal">${cal} kcal</td>
+            `;
+            tableBody.appendChild(row);
+          });
+          dayCalories[0] = totalLoggedCalories;
+        }
+
+        updateActivityTotalsUI();
+        updateLoggedBarUI();
+        renderActivityChart();
+        updateHudTargetRings();
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+    }
+  }
+
+  // Save Body Data to Database
   if (saveBtn) {
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', async () => {
       const height = parseFloat(heightInput.value);
       const weight = parseFloat(weightInput.value);
 
@@ -54,36 +113,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      localStorage.setItem('user_height', height);
-      localStorage.setItem('user_weight', weight);
-      localStorage.setItem('user_gender', selectedGender);
-
-      processBodyData(height, weight, selectedGender);
-      alert('Body data saved successfully!');
+      try {
+        const res = await fetch('auth/save_body_data.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ height, weight, gender: selectedGender })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          processBodyData(height, weight, selectedGender);
+          alert('Body data saved to Database successfully!');
+        } else {
+          alert(result.message || 'Failed to save body data');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server error occurred while saving.');
+      }
     });
-  }
-
-  function loadSavedBodyData() {
-    const savedHeight = localStorage.getItem('user_height');
-    const savedWeight = localStorage.getItem('user_weight');
-    const savedGender = localStorage.getItem('user_gender');
-
-    if (savedGender) {
-      selectedGender = savedGender;
-      genderBtns.forEach((b) => {
-        b.classList.toggle('active', b.getAttribute('data-gender') === savedGender);
-      });
-    }
-
-    if (savedHeight && savedWeight) {
-      heightInput.value = savedHeight;
-      weightInput.value = savedWeight;
-      processBodyData(parseFloat(savedHeight), parseFloat(savedWeight), selectedGender);
-    } else {
-      heightInput.value = 178;
-      weightInput.value = 74;
-      processBodyData(178, 74, selectedGender);
-    }
   }
 
   function processBodyData(heightCm, weightKg, gender) {
@@ -144,17 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dynamicMaxCalorie = recommendedCalories;
     dynamicBmiColor = color;
-
-    const loggedBar = document.getElementById('loggedCaloriesBar');
-    const goalMaxCalText = document.getElementById('goalMaxCalText');
-    if (goalMaxCalText) {
-      goalMaxCalText.textContent = dynamicMaxCalorie.toLocaleString();
-    }
-    if (loggedBar) {
-      const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
-      loggedBar.style.width = `${goalPercent}%`;
-      loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
-    }
+    updateLoggedBarUI();
 
     const minBmi = 15;
     const maxBmi = 35;
@@ -176,6 +213,20 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWorkoutPlan(category);
     renderActivityChart();
     updateHudTargetRings();
+  }
+
+  function updateLoggedBarUI() {
+    const loggedBar = document.getElementById('loggedCaloriesBar');
+    const goalMaxCalText = document.getElementById('goalMaxCalText');
+    const loggedText = document.getElementById('loggedCaloriesText');
+
+    if (goalMaxCalText) goalMaxCalText.textContent = dynamicMaxCalorie.toLocaleString();
+    if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
+    if (loggedBar) {
+      const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
+      loggedBar.style.width = `${goalPercent}%`;
+      loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
+    }
   }
 
   function updateWorkoutPlan(category) {
@@ -218,205 +269,119 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderWorkoutList() {
-  const container = document.getElementById('workoutListContainer');
-  if (!container) return;
+    const container = document.getElementById('workoutListContainer');
+    if (!container) return;
 
-  container.innerHTML = currentWorkouts.map((item, index) => {
+    container.innerHTML = currentWorkouts.map((item, index) => {
+      const range = item.maxReps - item.minReps;
+      const progressFromBase = item.current - item.minReps;
+      const percentage = range > 0 ? (progressFromBase / range) * 100 : 0;
+
+      return `
+        <div class="workout-item">
+          <div class="workout-info">
+            <span class="workout-name">${item.name}</span>
+            <div class="workout-percentage">
+              <strong id="workoutVal-${index}">${item.current}${item.unit}</strong> <span class="min-val">(Min: ${item.minReps}${item.unit})</span>
+            </div>
+          </div>
+          <input 
+            type="range" 
+            class="workout-slider" 
+            id="slider-${index}"
+            min="${item.minReps}" 
+            max="${item.maxReps}" 
+            step="${item.step}" 
+            value="${item.current}"
+            style="--progress: ${percentage}%;"
+            oninput="window.handleSliderChange(${index}, this.value)"
+          >
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.handleSliderChange = function(index, value) {
+    const item = currentWorkouts[index];
+    item.current = parseFloat(value);
     const range = item.maxReps - item.minReps;
     const progressFromBase = item.current - item.minReps;
     const percentage = range > 0 ? (progressFromBase / range) * 100 : 0;
 
-    return `
-      <div class="workout-item">
-        <div class="workout-info">
-          <span class="workout-name">${item.name}</span>
-          <div class="workout-percentage">
-            <strong id="workoutVal-${index}">${item.current}${item.unit}</strong> <span class="min-val">(Min: ${item.minReps}${item.unit})</span>
-          </div>
-        </div>
-        <input 
-          type="range" 
-          class="workout-slider" 
-          id="slider-${index}"
-          min="${item.minReps}" 
-          max="${item.maxReps}" 
-          step="${item.step}" 
-          value="${item.current}"
-          style="--progress: ${percentage}%;"
-          oninput="window.handleSliderChange(${index}, this.value)"
-        >
-      </div>
-    `;
-  }).join('');
-}
+    const valDisplay = document.getElementById(`workoutVal-${index}`);
+    if (valDisplay) valDisplay.textContent = `${item.current}${item.unit}`;
 
-window.handleSliderChange = function(index, value) {
-  const item = currentWorkouts[index];
-  item.current = parseFloat(value);
+    const slider = document.getElementById(`slider-${index}`);
+    if (slider) slider.style.setProperty('--progress', `${percentage}%`);
+  };
 
-  const range = item.maxReps - item.minReps;
-  const progressFromBase = item.current - item.minReps;
-  const percentage = range > 0 ? (progressFromBase / range) * 100 : 0;
+  // Activity Log Action
+  const logBtn = document.getElementById('logActivityBtn');
+  const activitySelect = document.getElementById('activityType');
+  const skillSelect = document.getElementById('activitySkill');
+  const durationSelect = document.getElementById('activityDuration');
+  const tableBody = document.getElementById('activityLogTableBody');
 
-  const valDisplay = document.getElementById(`workoutVal-${index}`);
-  if (valDisplay) {
-    valDisplay.textContent = `${item.current}${item.unit}`;
+  if (logBtn) {
+    logBtn.addEventListener('click', async () => {
+      const activity = activitySelect ? activitySelect.value : 'Running';
+      const skillMultiplier = skillSelect ? parseFloat(skillSelect.value) : 1.0;
+      const duration = durationSelect ? parseInt(durationSelect.value, 10) : 30;
+
+      let baseRate = 8;
+      if (activity === 'Cycling') baseRate = 7;
+      if (activity === 'Skipping ropes') baseRate = 10;
+
+      const burnedKcal = Math.round(duration * baseRate * skillMultiplier);
+
+      try {
+        const res = await fetch('auth/log_activity.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ activity, duration, calories: burnedKcal })
+        });
+        const result = await res.json();
+
+        if (result.status === 'success') {
+          if (tableBody) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${activity}</td>
+              <td>${duration} min</td>
+              <td class="kcal">${burnedKcal} kcal</td>
+            `;
+            tableBody.insertBefore(row, tableBody.firstChild);
+          }
+
+          if (activity.includes('Run')) activityTotals.Running += burnedKcal;
+          else if (activity.includes('Cycling')) activityTotals.Cycling += burnedKcal;
+          else if (activity.includes('Skipping')) activityTotals.Skipping += burnedKcal;
+
+          updateActivityTotalsUI();
+          totalLoggedCalories += burnedKcal;
+          dayCalories[0] += burnedKcal;
+
+          updateLoggedBarUI();
+          renderActivityChart();
+          updateHudTargetRings();
+
+          alert(`Logged ${burnedKcal} kcal for ${activity}!`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to log activity to database.');
+      }
+    });
   }
 
-  const slider = document.getElementById(`slider-${index}`);
-  if (slider) {
-    slider.style.setProperty('--progress', `${percentage}%`);
-  }
-};
-
-function initActivityLog() {
-    const logBtn = document.getElementById('logActivityBtn');
-    const activitySelect = document.getElementById('activityType');
-    const skillSelect = document.getElementById('activitySkill');
-    const durationSelect = document.getElementById('activityDuration');
-    const tableBody = document.getElementById('activityLogTableBody');
-    const loggedText = document.getElementById('loggedCaloriesText');
-    const loggedBar = document.getElementById('loggedCaloriesBar');
-
+  function updateActivityTotalsUI() {
     const runningTotalText = document.getElementById('runningTotalText');
     const cyclingTotalText = document.getElementById('cyclingTotalText');
     const skippingTotalText = document.getElementById('skippingTotalText');
 
-    const chkRunning = document.getElementById('chkRunning');
-    const chkCycling = document.getElementById('chkCycling');
-    const chkSkipping = document.getElementById('chkSkipping');
-
-    const todayStr = new Date().toDateString();
-    const savedDate = localStorage.getItem('fitcore_last_date');
-    const savedHistory = localStorage.getItem('fitcore_day_calories');
-    const savedTotals = localStorage.getItem('fitcore_activity_totals');
-
-    if (savedHistory) {
-      dayCalories = JSON.parse(savedHistory);
-    } else {
-      dayCalories = [0, 0, 0, 0, 0];
-      localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
-    }
-
-    if (savedTotals) {
-      activityTotals = JSON.parse(savedTotals);
-    }
-
-    if (savedDate && savedDate !== todayStr) {
-      dayCalories.unshift(0);
-      if (dayCalories.length > 5) {
-        dayCalories.pop();
-      }
-      totalLoggedCalories = 0;
-      activityTotals = { Running: 0, Cycling: 0, Skipping: 0 };
-      localStorage.setItem('fitcore_last_date', todayStr);
-      localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
-      localStorage.setItem('fitcore_total_calories', '0');
-      localStorage.setItem('fitcore_activity_totals', JSON.stringify(activityTotals));
-    } else if (!savedDate) {
-      localStorage.setItem('fitcore_last_date', todayStr);
-    }
-
-    const savedTotal = localStorage.getItem('fitcore_total_calories');
-    if (savedTotal) {
-      totalLoggedCalories = parseInt(savedTotal, 10);
-    }
-
-    updateActivityTotalsUI();
-
-    if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
-    const currentPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
-    if (loggedBar) {
-      loggedBar.style.width = `${currentPercent}%`;
-      loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
-    }
-
-    renderActivityChart();
-
-    function updateActivityTotalsUI() {
-      if (runningTotalText) runningTotalText.textContent = `${activityTotals.Running.toLocaleString()} kcal`;
-      if (cyclingTotalText) cyclingTotalText.textContent = `${activityTotals.Cycling.toLocaleString()} kcal`;
-      if (skippingTotalText) skippingTotalText.textContent = `${activityTotals.Skipping.toLocaleString()} kcal`;
-    }
-
-    function applyActivityFilters() {
-      let filteredDay0 = 0;
-
-      if (chkRunning && chkRunning.checked) filteredDay0 += activityTotals.Running;
-      if (chkCycling && chkCycling.checked) filteredDay0 += activityTotals.Cycling;
-      if (chkSkipping && chkSkipping.checked) filteredDay0 += activityTotals.Skipping;
-
-      dayCalories[0] = filteredDay0;
-      totalLoggedCalories = filteredDay0;
-
-      if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
-
-      const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
-      if (loggedBar) {
-        loggedBar.style.width = `${goalPercent}%`;
-      }
-
-      renderActivityChart();
-    }
-
-    [chkRunning, chkCycling, chkSkipping].forEach(chk => {
-      if (chk) {
-        chk.addEventListener('change', applyActivityFilters);
-      }
-    });
-
-    if (logBtn) {
-      logBtn.addEventListener('click', () => {
-        const activity = activitySelect ? activitySelect.value : 'Running';
-        const skillMultiplier = skillSelect ? parseFloat(skillSelect.value) : 1.0;
-        const duration = durationSelect ? parseInt(durationSelect.value, 10) : 30;
-
-        let baseRate = 8;
-        if (activity === 'Cycling') baseRate = 7;
-        if (activity === 'Skipping ropes') baseRate = 10;
-
-        const burnedKcal = Math.round(duration * baseRate * skillMultiplier);
-
-        if (tableBody) {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${activity}</td>
-            <td>${duration} min</td>
-            <td class="kcal">${burnedKcal} kcal</td>
-          `;
-          tableBody.insertBefore(row, tableBody.firstChild);
-        }
-
-        if (activity === 'Running') activityTotals.Running += burnedKcal;
-        else if (activity === 'Cycling') activityTotals.Cycling += burnedKcal;
-        else if (activity === 'Skipping ropes') activityTotals.Skipping += burnedKcal;
-
-        updateActivityTotalsUI();
-
-        totalLoggedCalories += burnedKcal;
-        if (loggedText) loggedText.textContent = totalLoggedCalories.toLocaleString();
-
-        const goalPercent = Math.min(100, (totalLoggedCalories / dynamicMaxCalorie) * 100);
-        if (loggedBar) {
-          loggedBar.style.width = `${goalPercent}%`;
-          loggedBar.style.background = `linear-gradient(90deg, ${dynamicBmiColor}88 0%, ${dynamicBmiColor} 100%)`;
-        }
-
-        dayCalories[0] += burnedKcal;
-        localStorage.setItem('fitcore_day_calories', JSON.stringify(dayCalories));
-        localStorage.setItem('fitcore_total_calories', totalLoggedCalories.toString());
-        localStorage.setItem('fitcore_activity_totals', JSON.stringify(activityTotals));
-
-        if (chkRunning) chkRunning.checked = true;
-        if (chkCycling) chkCycling.checked = true;
-        if (chkSkipping) chkSkipping.checked = true;
-
-        renderActivityChart();
-        updateHudTargetRings();
-
-        alert(`Logged ${burnedKcal} kcal for ${activity}!`);
-      });
-    }
+    if (runningTotalText) runningTotalText.textContent = `${activityTotals.Running.toLocaleString()} kcal`;
+    if (cyclingTotalText) cyclingTotalText.textContent = `${activityTotals.Cycling.toLocaleString()} kcal`;
+    if (skippingTotalText) skippingTotalText.textContent = `${activityTotals.Skipping.toLocaleString()} kcal`;
   }
 
   function renderActivityChart() {
@@ -475,7 +440,6 @@ function initActivityLog() {
     }
 
     chartLine.setAttribute('d', pathD);
-
     const areaD = `${pathD} L ${points[points.length - 1].x},${chartBottom} L ${points[0].x},${chartBottom} Z`;
     chartArea.setAttribute('d', areaD);
 
@@ -497,6 +461,111 @@ function initActivityLog() {
     }
   }
 
+  // Water Tracker
+  function renderWaterUI() {
+    if (!waterIconsContainer) return;
+    waterIconsContainer.innerHTML = '';
+    for (let i = 1; i <= TOTAL_GLASSES; i++) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', `water-icon ${i <= currentGlasses ? 'active' : ''}`);
+      svg.setAttribute('viewBox', '0 0 24 24');
+      
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z');
+      svg.appendChild(path);
+
+      svg.addEventListener('click', () => {
+        currentGlasses = i;
+        saveAndUpdateWater();
+      });
+
+      waterIconsContainer.appendChild(svg);
+    }
+
+    if (waterCountEl) waterCountEl.textContent = currentGlasses;
+    const percentage = (currentGlasses / TOTAL_GLASSES) * 100;
+    if (waterBarFillEl) waterBarFillEl.style.width = `${percentage}%`;
+
+    const remaining = TOTAL_GLASSES - currentGlasses;
+    if (waterRemTextEl) {
+      if (remaining > 0) {
+        waterRemTextEl.textContent = `${remaining} glass${remaining > 1 ? 'es' : ''} remaining`;
+        waterRemTextEl.style.color = '#8e8e93';
+      } else {
+        waterRemTextEl.textContent = '🎉 Daily goal reached!';
+        waterRemTextEl.style.color = '#34c759';
+      }
+    }
+  }
+
+  async function saveAndUpdateWater() {
+    renderWaterUI();
+    updateHudTargetRings();
+    try {
+      await fetch('auth/save_water.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ glasses: currentGlasses })
+      });
+    } catch (e) {
+      console.error('Failed to save water:', e);
+    }
+  }
+
+  if (waterPlusBtn) {
+    waterPlusBtn.addEventListener('click', () => {
+      if (currentGlasses < TOTAL_GLASSES) {
+        currentGlasses++;
+        saveAndUpdateWater();
+      }
+    });
+  }
+
+  if (waterMinusBtn) {
+    waterMinusBtn.addEventListener('click', () => {
+      if (currentGlasses > 0) {
+        currentGlasses--;
+        saveAndUpdateWater();
+      }
+    });
+  }
+
+  function updateHudTargetRings() {
+    const ringCal = document.getElementById('ringCalorie');
+    const ringWork = document.getElementById('ringWorkout');
+    const ringWat = document.getElementById('ringWater');
+    const calLabel = document.getElementById('ringCalLabel');
+    const workLabel = document.getElementById('ringWorkLabel');
+    const watLabel = document.getElementById('ringWatLabel');
+    const overallPct = document.getElementById('ringsOverallPct');
+    const badgeText = document.getElementById('streakBadgeText');
+    const cardEl = document.getElementById('targetRingsCard');
+
+    const calPct = Math.min(100, Math.round((totalLoggedCalories / dynamicMaxCalorie) * 100)) || 0;
+    if (ringCal) ringCal.style.strokeDashoffset = 314.15 - (314.15 * (calPct / 100));
+    if (calLabel) calLabel.textContent = `${calPct}%`;
+
+    const isWorkoutDone = localStorage.getItem('fitcore_workout_done') === 'true';
+    const workPct = isWorkoutDone ? 100 : 0;
+    if (ringWork) ringWork.style.strokeDashoffset = 238.76 - (238.76 * (workPct / 100));
+    if (workLabel) workLabel.textContent = `${workPct}%`;
+
+    const watPct = Math.min(100, Math.round((currentGlasses / TOTAL_GLASSES) * 100)) || 0;
+    if (ringWat) ringWat.style.strokeDashoffset = 163.36 - (163.36 * (watPct / 100));
+    if (watLabel) watLabel.textContent = `${watPct}%`;
+
+    const avg = Math.round((calPct + workPct + watPct) / 3);
+    if (overallPct) overallPct.textContent = `${avg}%`;
+
+    if (calPct >= 100 && workPct >= 100 && watPct >= 100) {
+      if (cardEl) cardEl.classList.add('all-crushed');
+      if (badgeText) badgeText.textContent = '🔥 Streak: Active! All 3 Rings Crushed!';
+    } else {
+      if (cardEl) cardEl.classList.remove('all-crushed');
+      if (badgeText) badgeText.textContent = 'Daily Target: In Progress';
+    }
+  }
+
   function initWorkoutTimer() {
     const startWorkoutBtn = document.querySelector('.start-workout-btn');
     const sessionTimeSelect = document.getElementById('sessionTimeSelect');
@@ -511,7 +580,6 @@ function initActivityLog() {
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
     if (!timerModal) return;
-
     const CIRCLE_CIRCUMFERENCE = 439.8;
     let currentWorkoutIndex = 0;
     let timerInterval = null;
@@ -522,14 +590,11 @@ function initActivityLog() {
     if (startWorkoutBtn) {
       startWorkoutBtn.addEventListener('click', () => {
         if (!currentWorkouts || currentWorkouts.length === 0) {
-          alert('Please save body data first to generate workouts!');
+          alert('Please save body data first!');
           return;
         }
-
         const totalMinutes = sessionTimeSelect ? parseFloat(sessionTimeSelect.value) : 12;
-        const totalSeconds = totalMinutes * 60;
-        timePerExercise = Math.round(totalSeconds / currentWorkouts.length);
-
+        timePerExercise = Math.round((totalMinutes * 60) / currentWorkouts.length);
         currentWorkoutIndex = 0;
         timerModal.classList.add('active');
         loadWorkoutStep(currentWorkoutIndex);
@@ -554,9 +619,7 @@ function initActivityLog() {
         if (!isPaused) {
           timeLeft--;
           updateTimerDisplay();
-          if (timeLeft <= 0) {
-            nextWorkoutStep();
-          }
+          if (timeLeft <= 0) nextWorkoutStep();
         }
       }, 1000);
     }
@@ -566,7 +629,6 @@ function initActivityLog() {
       const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
       const secs = String(timeLeft % 60).padStart(2, '0');
       modalTimeDisplay.textContent = `${mins}:${secs}`;
-
       const offset = CIRCLE_CIRCUMFERENCE - (timeLeft / timePerExercise) * CIRCLE_CIRCUMFERENCE;
       timerActiveCircle.style.strokeDashoffset = offset;
     }
@@ -579,7 +641,7 @@ function initActivityLog() {
         clearInterval(timerInterval);
         localStorage.setItem('fitcore_workout_done', 'true');
         updateHudTargetRings();
-        alert('🎉 Great job! You completed all workouts!');
+        alert('🎉 Great job! Workout completed!');
         timerModal.classList.remove('active');
       }
     }
@@ -590,7 +652,6 @@ function initActivityLog() {
         modalPauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
       });
     }
-
     if (modalNextBtn) modalNextBtn.addEventListener('click', nextWorkoutStep);
     if (modalCloseBtn) {
       modalCloseBtn.addEventListener('click', () => {
@@ -600,249 +661,68 @@ function initActivityLog() {
     }
   }
 
-  function initWaterTracker() {
-    const savedGlasses = localStorage.getItem('user_water_glasses');
-    currentGlasses = savedGlasses !== null ? parseInt(savedGlasses, 10) : 5;
-    renderWaterUI();
-  }
-
-  function renderWaterUI() {
-    if (!waterIconsContainer) return;
-
-    waterIconsContainer.innerHTML = '';
-    for (let i = 1; i <= TOTAL_GLASSES; i++) {
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('class', `water-icon ${i <= currentGlasses ? 'active' : ''}`);
-      svg.setAttribute('viewBox', '0 0 24 24');
-      
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z');
-      svg.appendChild(path);
-
-      svg.addEventListener('click', () => {
-        currentGlasses = i;
-        saveAndUpdateWater();
-      });
-
-      waterIconsContainer.appendChild(svg);
-    }
-
-    if (waterCountEl) waterCountEl.textContent = currentGlasses;
-    
-    const percentage = (currentGlasses / TOTAL_GLASSES) * 100;
-    if (waterBarFillEl) waterBarFillEl.style.width = `${percentage}%`;
-
-    const remaining = TOTAL_GLASSES - currentGlasses;
-    if (waterRemTextEl) {
-      if (remaining > 0) {
-        waterRemTextEl.textContent = `${remaining} glass${remaining > 1 ? 'es' : ''} remaining`;
-        waterRemTextEl.style.color = '#8e8e93';
-      } else {
-        waterRemTextEl.textContent = '🎉 Daily goal reached!';
-        waterRemTextEl.style.color = '#34c759';
-      }
-    }
-  }
-
-  function saveAndUpdateWater() {
-    localStorage.setItem('user_water_glasses', currentGlasses);
-    renderWaterUI();
-    updateHudTargetRings();
-  }
-
-  if (waterPlusBtn) {
-    waterPlusBtn.addEventListener('click', () => {
-      if (currentGlasses < TOTAL_GLASSES) {
-        currentGlasses++;
-        saveAndUpdateWater();
-      }
-    });
-  }
-
-  if (waterMinusBtn) {
-    waterMinusBtn.addEventListener('click', () => {
-      if (currentGlasses > 0) {
-        currentGlasses--;
-        saveAndUpdateWater();
-      }
-    });
-  }
-  
   function initDailyFitnessTip() {
     const tipTitleEl = document.getElementById('dailyTipTitle');
     const tipDescEl = document.getElementById('dailyTipDesc');
     const tipIconEl = document.getElementById('dailyTipIcon');
     const countdownEl = document.getElementById('nextTipCountdown');
 
-    // Fitness Tips Collection
     const fitnessTips = [
-      {
-        icon: '💧',
-        title: 'Tip of the Day: Stay Hydrated!',
-        desc: 'Drink enough water throughout the day to stay hydrated, support recovery, and keep your body feeling energized.'
-      },
-      {
-        icon: '😴',
-        title: 'Tip of the Day: Prioritize Sleep',
-        desc: 'Getting 7 to 9 hours of good sleep helps your body recover, keeps you focused, and supports healthy energy levels.'
-      },
-      {
-        icon: '🥩',
-        title: 'Tip of the Day: Protein at Breakfast',
-        desc: 'Start your day with a protein rich breakfast to stay full longer and keep your energy steady.'
-      },
-      {
-        icon: '🚶',
-        title: 'Tip of the Day: Post-Meal Walking',
-        desc: 'A short walk after a meal is a simple way to stay active and support healthy digestion.'
-      },
-      {
-        icon: '🧘',
-        title: 'Tip of the Day: Active Recovery',
-        desc: 'Try some light stretching, yoga, or easy movement on rest days to help your body recover.'
-      },
-      {
-        icon: '⏱️',
-        title: 'Tip of the Day: Consistent Workout Timing',
-        desc: 'Working out around the same time each day can help you build a routine and stay consistent.'
-      },
-      {
-        icon: '🥬',
-        title: 'Tip of the Day: Fiber First',
-        desc: 'Adding vegetables and other fiber rich foods to your meals can help you feel full and maintain steady energy.'
-      }
+      { icon: '💧', title: 'Tip of the Day: Stay Hydrated!', desc: 'Drink enough water throughout the day to support recovery and feel energized.' },
+      { icon: '😴', title: 'Tip of the Day: Prioritize Sleep', desc: '7 to 9 hours of sleep helps muscle recovery and keeps energy high.' },
+      { icon: '🥩', title: 'Tip of the Day: Protein at Breakfast', desc: 'Start your day with a protein-rich breakfast to maintain muscle.' },
+      { icon: '🚶', title: 'Tip of the Day: Post-Meal Walking', desc: 'A short walk after a meal supports digestion and blood sugar levels.' }
     ];
 
-    // Select tip based on day of the year
     function updateTipContent() {
-      const now = new Date();
-      const startOfYear = new Date(now.getFullYear(), 0, 0);
-      const diff = now - startOfYear;
-      const oneDay = 1000 * 60 * 60 * 24;
-      const dayOfYear = Math.floor(diff / oneDay);
-      
-      const tipIndex = dayOfYear % fitnessTips.length;
-      const currentTip = fitnessTips[tipIndex];
-
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      const currentTip = fitnessTips[dayOfYear % fitnessTips.length];
       if (tipIconEl) tipIconEl.textContent = currentTip.icon;
       if (tipTitleEl) tipTitleEl.textContent = currentTip.title;
       if (tipDescEl) tipDescEl.textContent = currentTip.desc;
     }
 
-    // Countdown to midnight 12 (00:00:00)
     function updateCountdown() {
       const now = new Date();
       const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      const diffMs = tomorrow - now;
-
-      if (diffMs <= 1000) {
-        updateTipContent();
-      }
-
-      const totalSecs = Math.floor(diffMs / 1000);
+      const totalSecs = Math.floor((tomorrow - now) / 1000);
       const hours = String(Math.floor(totalSecs / 3600)).padStart(2, '0');
       const mins = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, '0');
       const secs = String(totalSecs % 60).padStart(2, '0');
-
-      if (countdownEl) {
-        countdownEl.textContent = `${hours}:${mins}:${secs}`;
-      }
+      if (countdownEl) countdownEl.textContent = `${hours}:${mins}:${secs}`;
     }
 
     updateTipContent();
     updateCountdown();
     setInterval(updateCountdown, 1000);
   }
-function updateHudTargetRings() {
-  const ringCal = document.getElementById('ringCalorie');
-  const ringWork = document.getElementById('ringWorkout');
-  const ringWat = document.getElementById('ringWater');
 
-  const calLabel = document.getElementById('ringCalLabel');
-  const workLabel = document.getElementById('ringWorkLabel');
-  const watLabel = document.getElementById('ringWatLabel');
-  const overallPct = document.getElementById('ringsOverallPct');
-  const badgeText = document.getElementById('streakBadgeText');
-  const cardEl = document.getElementById('targetRingsCard');
+  function initRealtimeWorkoutPlan() {
+    const daysGridContainer = document.getElementById('workoutDaysGrid');
+    if (!daysGridContainer) return;
 
-  // 1. Calorie Progress
-  const calPct = Math.min(100, Math.round((totalLoggedCalories / dynamicMaxCalorie) * 100)) || 0;
-  if (ringCal) ringCal.style.strokeDashoffset = 314.15 - (314.15 * (calPct / 100));
-  if (calLabel) calLabel.textContent = `${calPct}%`;
+    const weeklySchedule = [
+      { name: 'MON', letter: 'M', pills: ['Chest', 'Triceps'], dayIndex: 1 },
+      { name: 'TUE', letter: 'T', pills: ['Back', 'Biceps'], dayIndex: 2 },
+      { name: 'WED', letter: 'W', pills: ['Legs', 'Core'], dayIndex: 3 },
+      { name: 'THU', letter: 'T', pills: ['Shoulders', 'Arms'], dayIndex: 4 },
+      { name: 'FRI', letter: 'F', pills: ['Cardio', 'HIIT'], dayIndex: 5 },
+      { name: 'SAT', letter: 'S', pills: ['Full Body'], dayIndex: 6 },
+      { name: 'SUN', letter: 'S', pills: ['Rest', 'Stretch'], dayIndex: 0 }
+    ];
 
-  // 2. Workout Progress
-  const isWorkoutDone = localStorage.getItem('fitcore_workout_done') === 'true';
-  const workPct = isWorkoutDone ? 100 : 0;
-  if (ringWork) ringWork.style.strokeDashoffset = 238.76 - (238.76 * (workPct / 100));
-  if (workLabel) workLabel.textContent = `${workPct}%`;
-
-  // 3. Water Progress
-  const watPct = Math.min(100, Math.round((currentGlasses / TOTAL_GLASSES) * 100)) || 0;
-  if (ringWat) ringWat.style.strokeDashoffset = 163.36 - (163.36 * (watPct / 100));
-  if (watLabel) watLabel.textContent = `${watPct}%`;
-
-  // Average Completion
-  const avg = Math.round((calPct + workPct + watPct) / 3);
-  if (overallPct) overallPct.textContent = `${avg}%`;
-
-  // 100% Milestone Trigger
-  if (calPct >= 100 && workPct >= 100 && watPct >= 100) {
-    if (cardEl) cardEl.classList.add('all-crushed');
-    if (badgeText) badgeText.textContent = '🔥 Streak: 5 Days Active! All 3 Rings Crushed!';
-  } else {
-    if (cardEl) cardEl.classList.remove('all-crushed');
-    if (badgeText) badgeText.textContent = 'Daily Target: In Progress';
-  }
-}
-//workout plan
-function initRealtimeWorkoutPlan() {
-  const daysGridContainer = document.getElementById('workoutDaysGrid');
-  if (!daysGridContainer) return;
-
-  const weeklySchedule = [
-    { name: 'MON', letter: 'M', pills: ['Chest', 'Triceps'], dayIndex: 1 },
-    { name: 'TUE', letter: 'T', pills: ['Back', 'Biceps'], dayIndex: 2 },
-    { name: 'WED', letter: 'W', pills: ['Legs', 'Core'], dayIndex: 3 },
-    { name: 'THU', letter: 'T', pills: ['Shoulders', 'Arms'], dayIndex: 4 },
-    { name: 'FRI', letter: 'F', pills: ['Cardio', 'HIIT'], dayIndex: 5 },
-    { name: 'SAT', letter: 'S', pills: ['Full Body'], dayIndex: 6 },
-    { name: 'SUN', letter: 'S', pills: ['Rest', 'Stretch'], dayIndex: 0 }
-  ];
-
-  let currentRenderedDay = null;
-
-  function updateWorkoutDaysGrid() {
     const todayIndex = new Date().getDay();
-
-    if (currentRenderedDay === todayIndex) return;
-    currentRenderedDay = todayIndex;
-
     daysGridContainer.innerHTML = weeklySchedule.map(day => {
       const isToday = day.dayIndex === todayIndex;
       const pillsHtml = day.pills.map(pill => `<div class="day-pill">${pill}</div>`).join('');
-
       return `
         <div class="day-card ${isToday ? 'active' : ''}">
           <div class="day-name">${day.name}</div>
           <div class="day-icon-circle">${day.letter}</div>
-          <div class="day-pills">
-            ${pillsHtml}
-          </div>
+          <div class="day-pills">${pillsHtml}</div>
           ${isToday ? '<div class="today-tag">TODAY</div>' : ''}
         </div>
       `;
     }).join('');
   }
-
-  updateWorkoutDaysGrid();
-  setInterval(updateWorkoutDaysGrid, 30000);
-}
-
 });
-
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', () => {
-    window.location.href = 'Home.html';
-  });
-}
