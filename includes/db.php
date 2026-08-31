@@ -3,7 +3,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "fitcore";
+$db   = "fitcore_db";
 
 // MySQL connect database
 $conn = mysqli_connect($host, $user, $pass, $db);
