@@ -60,7 +60,7 @@ while ($row = mysqli_fetch_assoc($chartResult)) {
 }
 
 $last5Days = [];
-for ($i = 0; $i < 5; $i++) {
+for ($i = 4; $i >= 0; $i--) {
     $d = date('Y-m-d', strtotime("-$i days"));
     $last5Days[] = $chartDataMap[$d] ?? 0;
 }

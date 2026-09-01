@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Load Dashboard data
+  // Load Dashboard data 
   loadDashboardData();
   initWorkoutTimer();
   initDailyFitnessTip();
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tableBody.appendChild(row);
           });
-          dayCalories[0] = totalLoggedCalories;
+          dayCalories[4] = totalLoggedCalories;
         }
 
         updateActivityTotalsUI();
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           updateActivityTotalsUI();
           totalLoggedCalories += burnedKcal;
-          dayCalories[0] += burnedKcal;
+          dayCalories[4] += burnedKcal;
 
           updateLoggedBarUI();
           renderActivityChart();
@@ -448,16 +448,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', p.x);
       circle.setAttribute('cy', p.y);
-      circle.setAttribute('r', idx === 0 ? '5' : '3.5');
-      circle.setAttribute('fill', idx === 0 ? activeColor : `${activeColor}88`);
+      circle.setAttribute('r', idx === 4 ? '5' : '3.5');
+      circle.setAttribute('fill', idx === 4 ? activeColor : `${activeColor}88`);
       chartPoints.appendChild(circle);
     });
 
     if (day1Label) {
-      const labelY = Math.max(12, points[0].y - 10);
+      const todayPoint = points[4];
+      const labelY = Math.max(12, todayPoint.y - 10);
       day1Label.setAttribute('y', labelY);
-      day1Label.setAttribute('x', points[0].x);
+      day1Label.setAttribute('x', todayPoint.x);
       day1Label.setAttribute('fill', activeColor);
+      day1Label.textContent = `Today (${dayCalories[4]} kcal)`;
     }
   }
 
