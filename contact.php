@@ -20,10 +20,10 @@
     </div>
     <nav>
       <ul>
-        <li><a href="Home.html">Home</a></li>
-        <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="About.html">About Us</a></li>
-        <li><a href="Contact.html" class="active">Contact Us</a></li>
+        <li><a href="Index.php">Home</a></li>
+        <li><a href="dashboard.php">Dashboard</a></li>
+        <li><a href="About.php">About Us</a></li>
+        <li><a href="contact.php" class="active">Contact Us</a></li>
       </ul>
     </nav>
   </header>
@@ -164,17 +164,17 @@
 
       <div class="footer-col">
         <h3>PRODUCT</h3>
-        <p><a href="Dashboard.html">Dashboard</a></p>
-        <p><a href="Dashboard.html">Workouts</a></p>
+        <p><a href="dashboard.php">Dashboard</a></p>
+        <p><a href="dashboard.php">Workouts</a></p>
         <p><a href="goals.html">Goals</a></p>
       </div>
 
       <div class="footer-col">
         <h3>SUPPORT</h3>
-        <p><a href="Contact.html">Help Center</a></p>
-        <p><a href="Contact.html">Privacy</a></p>
-        <p><a href="Contact.html">Terms</a></p>
-        <p><a href="Contact.html">Status</a></p>
+        <p><a href="contact.php">Help Center</a></p>
+        <p><a href="contact.php">Privacy</a></p>
+        <p><a href="contact.php">Terms</a></p>
+        <p><a href="contact.php">Status</a></p>
       </div>
     </div> 
 
@@ -252,7 +252,7 @@
 const closeModal = document.getElementById('closeModal');
 const goToLogin = document.getElementById('goToLogin');
 
-const dashboardLinks = document.querySelectorAll('a[href*="Dashboard.html"], a[href*="dashboard.html"]');
+const dashboardLinks = document.querySelectorAll('a[href*="dashboard.php"], a[href*="dashboard.php"]');
 
 dashboardLinks.forEach(link => {
   link.addEventListener('click', (e) => {
@@ -271,7 +271,7 @@ if (closeModal) {
 
 if (goToLogin) {
   goToLogin.addEventListener('click', () => {
-    window.location.href = 'Login.html';
+    window.location.href = 'login.php';
   });
 }
   </script>

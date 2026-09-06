@@ -11,7 +11,7 @@
 
   <div class="dark-card auth-card text-center p-4">
     <!-- Brand Logo -->
-    <a href="Home.html" class="brand-logo text-decoration-none d-block mb-3">
+    <a href="Index.php" class="brand-logo text-decoration-none d-block mb-3">
       <img src="images/logo1.png" alt="FitCore Logo" class="brand-logo-img">
     </a>
 
@@ -79,7 +79,7 @@
         if (data.status === 'success') {
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('userName', data.userName);
-          window.location.href = 'Dashboard.html';
+          window.location.href = 'dashboard.php';
         } else {
           alert(data.message);
         }
@@ -97,7 +97,7 @@
         if (data.status === 'success') {
           localStorage.setItem('isLoggedIn', 'true');
           alert('Registration successful!');
-          window.location.href = 'Dashboard.html';
+          window.location.href = 'dashboard.php';
         } else {
           alert(data.message);
         }

@@ -22,10 +22,10 @@
     </div>
     <nav>
         <ul>
-            <li><a href="Home.html" class="active">Home</a></li>
-            <li><a href="Dashboard.html">Dashboard</a></li>
-            <li><a href="About.html">About us</a></li>
-            <li><a href="Contact.html">Contact us</a></li>
+            <li><a href="Index.php" class="active">Home</a></li>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="About.php">About us</a></li>
+            <li><a href="contact.php">Contact us</a></li>
         </ul>
     </nav>
     <button class="login">LOGIN</button>
@@ -77,21 +77,21 @@
                 <div class="icon-box"><i class="fa-solid fa-chart-line"></i></div>
                 <h3>Digital Dashboard</h3>
                 <p>Visualize every rep, step, and calorie with a live dashboard built around your real metrics not generic averages.</p>
-                <a href="dashboard.html" class="learn-more">LEARN MORE &rarr;</a>
+                <a href="dashboard.php" class="learn-more">LEARN MORE &rarr;</a>
             </div>
 
             <div class="card">
                 <div class="icon-box"><i class="fa-solid fa-bullseye"></i></div>
                 <h3>Set a Goal</h3>
                 <p>Define milestones that matter. FitCore breaks ambitious targets into daily, achievable micro goals so progress stays visible.</p>
-                <a href="dashboard.html" class="learn-more">LEARN MORE &rarr;</a>
+                <a href="dashboard.php" class="learn-more">LEARN MORE &rarr;</a>
             </div>
 
             <div class="card">
                 <div class="icon-box"><i class="fa-solid fa-dumbbell"></i></div>
                 <h3>Workout</h3>
                 <p>Access thousands of intelligently sequenced workouts, dynamically adjusted to your current fitness level and recovery state.</p>
-                <a href="dashboard.html" class="learn-more">LEARN MORE &rarr;</a>
+                <a href="dashboard.php" class="learn-more">LEARN MORE &rarr;</a>
             </div>
         </div>
     </section>
@@ -108,17 +108,17 @@
 
             <div class="footer-col">
                 <h3>PRODUCT</h3>
-                <p><a href="dashboard.html">Dashboard</a></p>
-                <p><a href="dashboard.html">Workouts</a></p>
+                <p><a href="dashboard.php">Dashboard</a></p>
+                <p><a href="dashboard.php">Workouts</a></p>
                 <p><a href="goals.html">Goals</a></p>
             </div>
 
             <div class="footer-col">
                 <h3>SUPPORT</h3>
-                <p><a href="Contact.html">Help Center</a></p>
-                <p><a href="Contact.html">Privacy</a></p>
-                <p><a href="Contact.html">Terms</a></p>
-                <p><a href="Contact.html">Status</a></p>
+                <p><a href="contact.php">Help Center</a></p>
+                <p><a href="contact.php">Privacy</a></p>
+                <p><a href="contact.php">Terms</a></p>
+                <p><a href="contact.php">Status</a></p>
             </div>
         </div> 
 

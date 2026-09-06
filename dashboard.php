@@ -8,7 +8,7 @@
   <!--User not logout, cannot login to the page -->
   <script>
     if (localStorage.getItem('isLoggedIn') !== 'true') {
-      window.location.replace('Login.html');
+      window.location.replace('login.php');
     }
     fetch('auth/check_auth.php')
       .then(res => res.json())
@@ -16,7 +16,7 @@
         if (!data.authenticated) {
           localStorage.removeItem('isLoggedIn');
           localStorage.removeItem('user');
-          window.location.replace('Login.html');
+          window.location.replace('login.php');
         } else if (data.user && data.user.name) {
           document.addEventListener('DOMContentLoaded', () => {
             const nameSpan = document.querySelector('.welcome-text span');
@@ -25,7 +25,7 @@
         }
       })
       .catch(() => {
-        window.location.replace('Login.html');
+        window.location.replace('login.php');
       });
   </script> 
 
@@ -44,10 +44,10 @@
     </div>
     <nav>
       <ul>
-        <li><a href="Home.html">Home</a></li>
-        <li><a href="Dashboard.html" class="active">Dashboard</a></li>
-        <li><a href="About.html">About Us</a></li>
-        <li><a href="Contact.html">Contact Us</a></li>
+        <li><a href="Index.php">Home</a></li>
+        <li><a href="dashboard.php" class="active">Dashboard</a></li>
+        <li><a href="About.php">About Us</a></li>
+        <li><a href="contact.php">Contact Us</a></li>
       </ul>
     </nav>
   </header>
@@ -459,17 +459,17 @@
 
       <div class="footer-col">
         <h3>PRODUCT</h3>
-        <p><a href="Dashboard.html">Dashboard</a></p>
-        <p><a href="Dashboard.html">Workouts</a></p>
+        <p><a href="dashboard.php">Dashboard</a></p>
+        <p><a href="dashboard.php">Workouts</a></p>
         <p><a href="goals.html">Goals</a></p>
       </div>
 
       <div class="footer-col">
         <h3>SUPPORT</h3>
-        <p><a href="Contact.html">Help Center</a></p>
-        <p><a href="Contact.html">Privacy</a></p>
-        <p><a href="Contact.html">Terms</a></p>
-        <p><a href="Contact.html">Status</a></p>
+        <p><a href="contact.php">Help Center</a></p>
+        <p><a href="contact.php">Privacy</a></p>
+        <p><a href="contact.php">Terms</a></p>
+        <p><a href="contact.php">Status</a></p>
       </div>
     </div> 
 
@@ -513,7 +513,7 @@
       localStorage.removeItem('user');
       fetch('auth/logout.php')
         .finally(() => {
-          window.location.href = 'Login.html';
+          window.location.href = 'login.php';
         });
     });
   </script>
