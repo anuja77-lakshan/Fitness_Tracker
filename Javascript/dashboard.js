@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch('auth/get_dashboard_data.php');
       if (res.status === 401) {
-        window.location.replace('Login.html');
+        window.location.replace('login.php');
         return;
       }
       const data = await res.json();

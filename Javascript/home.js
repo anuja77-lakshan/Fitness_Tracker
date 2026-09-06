@@ -59,7 +59,7 @@ function handleProtectedNavigation(event) {
     if (!isLoggedIn) {
         modal.classList.add("active"); // Show warning modal
     } else {
-        window.location.href = "Dashboard.html"; 
+        window.location.href = "dashboard.php"; 
     }
 }
 
@@ -70,7 +70,7 @@ if (enterBtn) {
 }
 
 
-const dashboardNavLink = document.querySelector('nav ul li a[href="Dashboard.html"]');
+const dashboardNavLink = document.querySelector('nav ul li a[href="dashboard.php"]');
 if (dashboardNavLink) {
     dashboardNavLink.addEventListener("click", handleProtectedNavigation);
 }
@@ -90,7 +90,7 @@ if (closeModalBtn) {
 
 if (goToLoginBtn) {
     goToLoginBtn.addEventListener("click", () => {
-        window.location.href = "Login.html"; // Navigate to login page
+        window.location.href = "login.php"; // Navigate to login page
     });
 }
 
@@ -98,6 +98,6 @@ if (goToLoginBtn) {
 const headerLoginBtn = document.querySelector('.login');
 if (headerLoginBtn) {
     headerLoginBtn.addEventListener("click", () => {
-        window.location.href = "Login.html";
+        window.location.href = "login.php";
     });
 }
