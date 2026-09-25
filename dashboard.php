@@ -461,7 +461,7 @@
         <h3>PRODUCT</h3>
         <p><a href="dashboard.php">Dashboard</a></p>
         <p><a href="dashboard.php">Workouts</a></p>
-        <p><a href="goals.html">Goals</a></p>
+        <p><a href="dashboard.php">Goals</a></p>
       </div>
 
       <div class="footer-col">
